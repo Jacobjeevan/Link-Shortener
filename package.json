@@ -1,0 +1,29 @@
+{
+  "name": "jeevanlink",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "NODE_ENV=dev nodemon",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@supercharge/strings": "^1.16.0",
+    "async-redis": "^1.1.7",
+    "bcrypt": "^5.0.0",
+    "connect-mongodb-session": "^2.4.1",
+    "connect-redis": "^5.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-mongo-sanitize": "^2.0.0",
+    "express-session": "^1.17.1",
+    "express-validator": "^6.6.1",
+    "mongoose": "^5.10.15",
+    "morgan": "^1.10.0",
+    "redis": "^3.0.2"
+  }
+}
