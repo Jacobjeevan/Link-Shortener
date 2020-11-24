@@ -1,4 +1,4 @@
-const { redisDB } = require("../db/redisDB"),
+const { redisDB } = require("../redisDB"),
   Str = require("@supercharge/strings");
 
 async function getUrl(shortUrl) {

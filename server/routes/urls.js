@@ -14,12 +14,12 @@ router.post("/shorten", async (req, res) => {
   }
 });
 
-router.get(":/shortUrl", async (req, res) => {
+router.get("/:shortUrl", async (req, res) => {
   const { shortUrl } = req.params;
   try {
     const url = await getUrl(shortUrl);
     if (url) res.redirect(url);
-    else res.status(404).json("Url not Found");
+    else handleError(res, 404, "Url not Found");
   } catch (error) {
     handleError(res, 400, error);
   }
