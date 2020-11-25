@@ -1,7 +1,7 @@
 const express = require("express"),
   cors = require("cors"),
   session = require("express-session"),
-  redis = require("redis"),
+  Redis = require("ioredis"),
   /* mongoose = require("mongoose"),
   MongoSanitize = require("express-mongo-sanitize"),
   morgan = require("morgan"),
@@ -20,9 +20,10 @@ dotenv.config({
 });
 
 let RedisStore = require("connect-redis")(session),
-  redisClient = redis.createClient({
+  redisClient = new Redis({
     port: process.env.Redis_session_port,
     host: process.env.Redis_session_host,
+    db: process.env.Redis_session_db,
   });
 
 redisClient.on("error", function (error) {

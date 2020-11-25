@@ -1,4 +1,4 @@
-const asyncRedis = require("async-redis");
+const Redis = require("ioredis");
 (dotenv = require("dotenv")), ({ promisify } = require("util"));
 
 let configPath = "./config/.env.prod";
@@ -12,9 +12,10 @@ dotenv.config({
   path: configPath,
 });
 
-const redisDB = asyncRedis.createClient({
+const redisDB = new Redis({
   port: process.env.RedisDB_port,
   host: process.env.RedisDB_host,
+  db: process.env.RedisDB_db,
 });
 
 redisDB.on("error", function (error) {
