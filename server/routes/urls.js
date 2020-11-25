@@ -7,7 +7,7 @@ router.post("/shorten", async (req, res) => {
   try {
     if (url) {
       const shortUrl = await createShortUrl(url);
-      res.json(shortUrl);
+      res.json({ shortUrl: shortUrl });
     }
   } catch (error) {
     handleError(res, 400, error);
