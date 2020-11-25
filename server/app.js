@@ -2,8 +2,8 @@ const express = require("express"),
   cors = require("cors"),
   session = require("express-session"),
   Redis = require("ioredis"),
-  /* mongoose = require("mongoose"),
-  MongoSanitize = require("express-mongo-sanitize"),
+  mongoose = require("mongoose"),
+  /*MongoSanitize = require("express-mongo-sanitize"),
   morgan = require("morgan"),
   bcrypt = require("bcrypt"), */
   dotenv = require("dotenv");
@@ -50,11 +50,24 @@ app.use(
 );
 
 const urlRouter = require("./routes/urls");
+const userRouter = require("./routes/users");
 
 app.use("/", urlRouter);
+app.use("/", userRouter);
 
 app.listen(port, () => {
   console.log(`Server is currently running on the port: ${port}`);
+});
+
+mongoose.connect(process.env.Mongo_URI, {
+  useUnifiedTopology: true,
+  useNewUrlParser: true,
+  useCreateIndex: true,
+});
+
+const connection = mongoose.connection;
+connection.once("open", () => {
+  console.log("MongoDB database connection established succesfully");
 });
 
 module.exports = app;
