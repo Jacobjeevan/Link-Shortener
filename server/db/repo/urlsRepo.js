@@ -1,20 +1,20 @@
-const { redisDB } = require("../redisDB"),
-  Str = require("@supercharge/strings");
+const Str = require("@supercharge/strings"),
+  Url = require("../models/url");
 
 async function getUrl(shortUrl) {
   try {
-    let url = await redisDB.get(shortUrl);
-    return url ? url : null;
+    const UrlEntry = await Url.findOne({ shortUrl });
+    return UrlEntry ? UrlEntry.longUrl : null;
   } catch (error) {
     console.log(error);
     throw new Error(`Get Url By Short Url Error: ${error}`);
   }
 }
 
-async function getShortUrl(url) {
+async function getShortUrl(longUrl) {
   try {
-    let shortUrl = await redisDB.get(url);
-    return shortUrl ? shortUrl : null;
+    const UrlEntry = await Url.findOne({ longUrl });
+    return UrlEntry ? UrlEntry.shortUrl : null;
   } catch (error) {
     console.log(error);
     throw new Error(`Get Short Url By Url Error: ${error}`);
@@ -34,11 +34,13 @@ async function createShortUrl(url) {
   }
 }
 
-async function shortenUrl(url) {
+async function shortenUrl(longUrl) {
   try {
     const shortUrl = Str.random(5);
-    await redisDB.set(shortUrl, url);
-    await redisDB.set(url, shortUrl);
+    await Url.create({
+      longUrl,
+      shortUrl
+    });
     return shortUrl;
   } catch (error) {
     console.log(error);
@@ -46,4 +48,12 @@ async function shortenUrl(url) {
   }
 }
 
-module.exports = { getUrl, createShortUrl };
+async function getAllUrls() {
+  try {
+    return Url.find({}).exec();
+  } catch (error) {
+    throw new Error(`Could not get all Urls: ${error}`)
+  }
+}
+
+module.exports = { getUrl, createShortUrl, getAllUrls };

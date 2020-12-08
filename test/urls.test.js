@@ -4,8 +4,8 @@ const server = require("../server/app");
 const should = chai.should();
 chai.use(chaiHttp);
 const agent = chai.request.agent(server);
-const { redisDB } = require("../server/db/redisDB");
-const User = require("../server/db/models/user");
+const User = require("../server/db/models/user"),
+  Url = require("../server/db/models/url");
 const { hashPassword } = require("../server/helpers/user.helper");
 
 const urlReq = {
@@ -39,27 +39,27 @@ describe("URLs", () => {
   describe("Authenticated User", () => {
     before(async () => {
       await User.deleteMany({});
+      await Url.deleteMany({});
       hashedPass = await hashPassword(userReq.password);
-      await redisDB.flushdb();
       await User.create({ email: userReq.email, password: hashedPass });
     });
 
     after(async () => {
       await User.deleteMany({});
-      await redisDB.flushdb();
-    })
+      await Url.deleteMany({});
+    });
 
     beforeEach((done) => {
       agent
-      .post("/login")
-      .send({ email: userReq.email, password: userReq.password })
-      .end((err, res) => {
-        res.should.have.status(200);
-        res.body.should.have.property("user");
-        res.body.user.email.should.equal(userReq.email);
-        done();
-      });
-    })
+        .post("/login")
+        .send({ email: userReq.email, password: userReq.password })
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.have.property("user");
+          res.body.user.email.should.equal(userReq.email);
+          done();
+        });
+    });
 
     afterEach((done) => {
       agent
@@ -79,8 +79,8 @@ describe("URLs", () => {
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.property("shortUrl");
-          redisDB.get(urlReq.url, (redisErr, redisRes) => {
-            res.body.shortUrl.should.equal(redisRes);
+          Url.findOne({ longUrl: urlReq.url }).then((urlEntry) => {
+            res.body.shortUrl.should.equal(urlEntry.shortUrl);
             done();
           });
         });
@@ -95,19 +95,18 @@ describe("URLs", () => {
           res.should.have.status(200);
           res.body.should.have.property("shortUrl");
           shortUrl = res.body.shortUrl;
-          redisDB.get(urlReq.url, (redisErr, redisRes) => {
-            res.body.shortUrl.should.equal(redisRes);
+          Url.findOne({ longUrl: urlReq.url }).then((urlEntry) => {
+            res.body.shortUrl.should.equal(urlEntry.shortUrl);
+            agent
+              .post("/shorten")
+              .send(urlReq)
+              .end((err, res) => {
+                res.should.have.status(200);
+                res.body.should.have.property("shortUrl");
+                res.body.shortUrl.should.equal(shortUrl);
+                done();
+              });
           });
-
-          agent
-            .post("/shorten")
-            .send(urlReq)
-            .end((err, res) => {
-              res.should.have.status(200);
-              res.body.should.have.property("shortUrl");
-              res.body.shortUrl.should.equal(shortUrl);
-              done();
-            });
         });
     });
 
@@ -120,9 +119,8 @@ describe("URLs", () => {
           res.should.have.status(200);
           res.body.should.have.property("shortUrl");
           shortUrl = res.body.shortUrl;
-
-          redisDB.get(urlReq.url, (redisErr, redisRes) => {
-            res.body.shortUrl.should.equal(redisRes);
+          Url.findOne({ longUrl: urlReq.url }).then((urlEntry) => {
+            res.body.shortUrl.should.equal(urlEntry.shortUrl);
             agent
               .get(`/${shortUrl}`)
               .redirects(1)
@@ -134,9 +132,13 @@ describe("URLs", () => {
           });
         });
     });
-  });
 
-  it("Should GET all shortened url/original url pairs", (done) => {
-    done();
+    /* it("Should GET all shortened url/original url pairs", (done) => {
+      agent.get("/all").end((err, res) => {
+        console.log(res.body);
+        res.should.have.status(200);
+        done();
+      });
+    }); */
   });
 });
