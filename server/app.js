@@ -6,7 +6,8 @@ const express = require("express"),
   /*MongoSanitize = require("express-mongo-sanitize"),
   morgan = require("morgan"),
   bcrypt = require("bcrypt"), */
-  dotenv = require("dotenv");
+  dotenv = require("dotenv"),
+  UserRepo = require("./db/repo/userRepo");
 
 let configPath = "./config/.env.prod";
 
@@ -39,21 +40,43 @@ const port = process.env.PORT || 5000;
  */
 
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+  })
+);
 
 app.use(
   session({
     store: new RedisStore({ client: redisClient }),
     secret: process.env.Redis_session_secret,
     resave: false,
+    name: process.env.Redis_session_name,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: Number(process.env.Redis_session_age),
+      sameSite: true,
+      secure: false,
+    },
   })
 );
+
+app.use(async (req, res, next) => {
+  const { user } = req.session;
+  if (user) {
+    const foundUser = await UserRepo.getUserById(user._id);
+    res.locals.user = foundUser;
+    req.session.user = foundUser;
+  }
+  next();
+});
 
 const urlRouter = require("./routes/urls");
 const userRouter = require("./routes/users");
 
-app.use("/", urlRouter);
 app.use("/", userRouter);
+app.use("/", urlRouter);
 
 app.listen(port, () => {
   console.log(`Server is currently running on the port: ${port}`);
