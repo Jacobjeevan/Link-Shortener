@@ -17,7 +17,16 @@ async function createNewUser(params) {
   }
 }
 
+async function getUserById(userId) {
+  try {
+    return User.findById(userId).exec();
+  } catch (error) {
+    throw new Error(`Failed to get DB user: ${error}`);
+  }
+}
+
 module.exports = {
   getUserByEmail,
   createNewUser,
+  getUserById,
 };
