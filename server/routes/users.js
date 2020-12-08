@@ -7,7 +7,7 @@ const {
   loginValidation,
   validate,
 } = require("./validations/user.validations");
-const { hashPassword } = require("../helpers/user.helper");
+const { hashPassword, checkIfLoggedIn } = require("../helpers/user.helper");
 
 router.post("/register", signupValidation(), validate, async (req, res) => {
   const { email, password } = req.body;
@@ -46,6 +46,13 @@ router.post("/login", loginValidation(), validate, async (req, res) => {
   } catch (error) {
     handleError(res, 400, error);
   }
+});
+
+router.get("/logout", checkIfLoggedIn, (req, res) => {
+  req.session.destroy(() => {
+    res.clearCookie(process.env.Redis_session_name);
+    res.redirect("/home");
+  });
 });
 
 module.exports = router;
