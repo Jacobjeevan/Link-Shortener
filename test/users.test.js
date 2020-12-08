@@ -21,113 +21,11 @@ describe("Users", () => {
     hashedPass = await hashPassword(userReq.password);
   });
 
-  it("Register route - Should successfully register user", (done) => {
-    agent
-      .post("/register")
-      .send(userReq)
-      .end((err, res) => {
-        res.should.have.status(200);
-        res.body.should.have.property("user");
-        res.body.user.email.should.equal(userReq.email);
-        done();
-      });
-  });
-
-  it("Register route - Should return error for missing email", (done) => {
-    agent
-      .post("/register")
-      .send({ ...userReq, email: null })
-      .end((err, res) => {
-        res.should.have.status(400);
-        res.body.should.have.property("error");
-        res.body.error.should.have.property("msg");
-        res.body.error.msg.should.equal("Email is required");
-        done();
-      });
-  });
-
-  it("Register route - Should return error if user already exists", (done) => {
-    User.create({
-      email: userReq.email,
-      password: hashedPass,
-    }).then(() => {
+  describe("Register routes", () => {
+    it("Register route - Should successfully register user", (done) => {
       agent
         .post("/register")
         .send(userReq)
-        .end((err, res) => {
-          res.should.have.status(403);
-          res.body.should.have.property("error");
-          res.body.error.should.have.property("msg");
-          res.body.error.msg.should.equal(
-            "Email is taken - User already exists"
-          );
-          done();
-        });
-    });
-  });
-
-  it("Register route - Should return error for improper email", (done) => {
-    agent
-      .post("/register")
-      .send({ ...userReq, email: "doom" })
-      .end((err, res) => {
-        res.should.have.status(400);
-        res.body.should.have.property("error");
-        res.body.error.should.have.property("msg");
-        res.body.error.msg.should.equal("Please provide a proper email");
-        done();
-      });
-  });
-
-  it("Register route - Should return error for missing password", (done) => {
-    agent
-      .post("/register")
-      .send({ ...userReq, password: null })
-      .end((err, res) => {
-        res.should.have.status(400);
-        res.body.should.have.property("error");
-        res.body.error.should.have.property("msg");
-        res.body.error.msg.should.equal("Password is required");
-        done();
-      });
-  });
-
-  it("Register route - Should return error for missing password confirmation", (done) => {
-    agent
-      .post("/register")
-      .send({ ...userReq, passwordConfirm: null })
-      .end((err, res) => {
-        res.should.have.status(400);
-        res.body.should.have.property("error");
-        res.body.error.should.have.property("msg");
-        res.body.error.msg.should.equal("Password confirmation is required");
-        done();
-      });
-  });
-
-  it("Register route - Should return error if password does not equal password confirmation", (done) => {
-    agent
-      .post("/register")
-      .send({ ...userReq, passwordConfirm: "test" })
-      .end((err, res) => {
-        res.should.have.status(400);
-        res.body.should.have.property("error");
-        res.body.error.should.have.property("msg");
-        res.body.error.msg.should.equal(
-          "Password confirmation does not match password"
-        );
-        done();
-      });
-  });
-
-  it("Login route - Should successfully login user", (done) => {
-    User.create({
-      email: userReq.email,
-      password: hashedPass,
-    }).then(() => {
-      agent
-        .post("/login")
-        .send({ email: userReq.email, password: userReq.password })
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.property("user");
@@ -135,22 +33,159 @@ describe("Users", () => {
           done();
         });
     });
+
+    it("Register route - Should return error for missing email", (done) => {
+      agent
+        .post("/register")
+        .send({ ...userReq, email: null })
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.have.property("error");
+          res.body.error.should.have.property("msg");
+          res.body.error.msg.should.equal("Email is required");
+          done();
+        });
+    });
+
+    it("Register route - Should return error if user already exists", (done) => {
+      User.create({
+        email: userReq.email,
+        password: hashedPass,
+      }).then(() => {
+        agent
+          .post("/register")
+          .send(userReq)
+          .end((err, res) => {
+            res.should.have.status(403);
+            res.body.should.have.property("error");
+            res.body.error.should.have.property("msg");
+            res.body.error.msg.should.equal(
+              "Email is taken - User already exists"
+            );
+            done();
+          });
+      });
+    });
+
+    it("Register route - Should return error for improper email", (done) => {
+      agent
+        .post("/register")
+        .send({ ...userReq, email: "doom" })
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.have.property("error");
+          res.body.error.should.have.property("msg");
+          res.body.error.msg.should.equal("Please provide a proper email");
+          done();
+        });
+    });
+
+    it("Register route - Should return error for missing password", (done) => {
+      agent
+        .post("/register")
+        .send({ ...userReq, password: null })
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.have.property("error");
+          res.body.error.should.have.property("msg");
+          res.body.error.msg.should.equal("Password is required");
+          done();
+        });
+    });
+
+    it("Register route - Should return error for missing password confirmation", (done) => {
+      agent
+        .post("/register")
+        .send({ ...userReq, passwordConfirm: null })
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.have.property("error");
+          res.body.error.should.have.property("msg");
+          res.body.error.msg.should.equal("Password confirmation is required");
+          done();
+        });
+    });
+
+    it("Register route - Should return error if password does not equal password confirmation", (done) => {
+      agent
+        .post("/register")
+        .send({ ...userReq, passwordConfirm: "test" })
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.have.property("error");
+          res.body.error.should.have.property("msg");
+          res.body.error.msg.should.equal(
+            "Password confirmation does not match password"
+          );
+          done();
+        });
+    });
   });
 
-  it("Login route - Should return error for wrong password", (done) => {
+  describe("Login routes", () => {
+    it("Login route - Should successfully login user", (done) => {
+      User.create({
+        email: userReq.email,
+        password: hashedPass,
+      }).then(() => {
+        agent
+          .post("/login")
+          .send({ email: userReq.email, password: userReq.password })
+          .end((err, res) => {
+            res.should.have.status(200);
+            res.body.should.have.property("user");
+            res.body.user.email.should.equal(userReq.email);
+            agent
+              .get("/logout")
+              .redirects(1)
+              .end((err, res) => {
+                res.should.have.status(200);
+                res.text.should.contain("Jeevan Link");
+                done();
+              });
+          });
+      });
+    });
+
+    it("Login route - Should return error for wrong password", (done) => {
+      User.create({
+        email: userReq.email,
+        password: hashedPass,
+      }).then(() => {
+        agent
+          .post("/login")
+          .send({ email: userReq.email, password: "testSomething" })
+          .end((err, res) => {
+            res.should.have.status(403);
+            res.body.should.have.property("error");
+            res.body.error.should.have.property("msg");
+            res.body.error.msg.should.equal("Username/password incorrect");
+            done();
+          });
+      });
+    });
+  });
+
+  it("Logout route", (done) => {
     User.create({
       email: userReq.email,
       password: hashedPass,
     }).then(() => {
       agent
         .post("/login")
-        .send({ email: userReq.email, password: "testSomething" })
+        .send({ ...userReq, passwordConfirm: null })
         .end((err, res) => {
-          res.should.have.status(403);
-          res.body.should.have.property("error");
-          res.body.error.should.have.property("msg");
-          res.body.error.msg.should.equal("Username/password incorrect");
-          done();
+          res.should.have.status(200);
+          res.body.should.have.property("user");
+          res.body.user.email.should.equal(userReq.email);
+
+          agent
+            .get("/logout")
+            .redirects(1)
+            .end((err, res) => {
+              res.should.have.status(200);
+              done();
+            });
         });
     });
   });
