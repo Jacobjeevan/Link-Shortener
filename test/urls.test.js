@@ -50,15 +50,17 @@ describe("URLs", () => {
     });
 
     beforeEach((done) => {
-      agent
-        .post("/login")
-        .send({ email: userReq.email, password: userReq.password })
-        .end((err, res) => {
-          res.should.have.status(200);
-          res.body.should.have.property("user");
-          res.body.user.email.should.equal(userReq.email);
-          done();
-        });
+      Url.deleteMany({}).then(() => {
+        agent
+          .post("/login")
+          .send({ email: userReq.email, password: userReq.password })
+          .end((err, res) => {
+            res.should.have.status(200);
+            res.body.should.have.property("user");
+            res.body.user.email.should.equal(userReq.email);
+            done();
+          });
+      });
     });
 
     afterEach((done) => {
@@ -123,6 +125,64 @@ describe("URLs", () => {
             res.body.shortUrl.should.equal(urlEntry.shortUrl);
             agent
               .get(`/${shortUrl}`)
+              .redirects(1)
+              .end((err, res) => {
+                res.should.have.status(200);
+                res.text.should.contain("My name is Jacob Jeevan.");
+                done();
+              });
+          });
+        });
+    });
+
+    it("Should create a custom Short url", (done) => {
+      agent
+        .post("/shorten")
+        .send({ ...urlReq, customURL: true, shortUrl: "portfolio" })
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.have.property("shortUrl");
+          Url.findOne({ longUrl: urlReq.url }).then((urlEntry) => {
+            res.body.shortUrl.should.equal(urlEntry.shortUrl);
+            done();
+          });
+        });
+    });
+
+    it("Should return error if custom Short url exists", (done) => {
+      agent
+        .post("/shorten")
+        .send({ ...urlReq, customURL: true, shortUrl: "portfolio" })
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.have.property("shortUrl");
+          Url.findOne({ longUrl: urlReq.url }).then((urlEntry) => {
+            res.body.shortUrl.should.equal(urlEntry.shortUrl);
+            agent
+              .post("/shorten")
+              .send({ ...urlReq, customURL: true, shortUrl: "portfolio" })
+              .end((err, res) => {
+                res.should.have.status(400);
+                res.body.should.have.property("error");
+                res.body.error.should.have.property("msg");
+                res.body.error.msg.should.equal("Custom Link already exists");
+                done();
+              });
+          });
+        });
+    });
+
+    it("Should redirect custom Short url", (done) => {
+      agent
+        .post("/shorten")
+        .send({ ...urlReq, customURL: true, shortUrl: "portfolio" })
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.have.property("shortUrl");
+          Url.findOne({ longUrl: urlReq.url }).then((urlEntry) => {
+            res.body.shortUrl.should.equal(urlEntry.shortUrl);
+            agent
+              .get("/portfolio")
               .redirects(1)
               .end((err, res) => {
                 res.should.have.status(200);

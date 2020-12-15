@@ -1,5 +1,6 @@
 const Str = require("@supercharge/strings"),
   Url = require("../models/url");
+const { handleError } = require("../../helpers/errors");
 
 async function getUrl(shortUrl) {
   try {
@@ -34,12 +35,28 @@ async function createShortUrl(url) {
   }
 }
 
+async function createCustomShortUrl(longUrl, shortUrl) {
+  try {
+    const existinglongUrl = await getUrl(shortUrl);
+    if (existinglongUrl) {
+      return false;
+    }
+    await Url.create({
+      longUrl,
+      shortUrl,
+    });
+    return true;
+  } catch (error) {
+    throw new Error(`Could not Create Custom Link: ${error}`);
+  }
+}
+
 async function shortenUrl(longUrl) {
   try {
     const shortUrl = Str.random(5);
     await Url.create({
       longUrl,
-      shortUrl
+      shortUrl,
     });
     return shortUrl;
   } catch (error) {
@@ -52,8 +69,8 @@ async function getAllUrls() {
   try {
     return Url.find({}).exec();
   } catch (error) {
-    throw new Error(`Could not get all Urls: ${error}`)
+    throw new Error(`Could not get all Urls: ${error}`);
   }
 }
 
-module.exports = { getUrl, createShortUrl, getAllUrls };
+module.exports = { getUrl, createShortUrl, getAllUrls, createCustomShortUrl };

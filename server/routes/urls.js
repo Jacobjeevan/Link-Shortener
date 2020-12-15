@@ -1,5 +1,9 @@
 const router = require("express").Router();
-const { getUrl, createShortUrl } = require("../db/repo/urlsRepo");
+const {
+  getUrl,
+  createShortUrl,
+  createCustomShortUrl,
+} = require("../db/repo/urlsRepo");
 const { handleError } = require("../helpers/errors");
 const { checkIfLoggedIn } = require("../helpers/user.helper");
 const {
@@ -18,12 +22,16 @@ router.post(
   postShortenValidation(),
   validate,
   async (req, res) => {
-    const { url } = req.body;
+    const { url, customURL } = req.body;
+    let { shortUrl } = req.body;
     try {
-      if (url) {
-        const shortUrl = await createShortUrl(url);
-        res.json({ shortUrl: shortUrl });
+      if (customURL && shortUrl) {
+        const custom = await createCustomShortUrl(url, shortUrl);
+        if (!custom) return handleError(res, 400, "Custom Link already exists");
+      } else {
+        shortUrl = await createShortUrl(url);
       }
+      res.json({ shortUrl: shortUrl });
     } catch (error) {
       handleError(res, 400, error);
     }
