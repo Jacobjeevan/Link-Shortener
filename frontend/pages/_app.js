@@ -1,10 +1,11 @@
 import React from "react";
+import { StateWrapper } from "../components/main/AppContext";
 import "../styles/globals.css";
 
 export default function App({ Component, pageProps }) {
   return (
-    <div>
+    <StateWrapper>
       <Component {...pageProps} />
-    </div>
+    </StateWrapper>
   );
 }
