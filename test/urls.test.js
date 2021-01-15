@@ -69,7 +69,8 @@ describe("URLs", () => {
         .redirects(1)
         .end((err, res) => {
           res.should.have.status(200);
-          res.text.should.contain("Jeevan Link");
+          res.body.should.property("success");
+          res.body.success.should.equal(true);
           done();
         });
     });

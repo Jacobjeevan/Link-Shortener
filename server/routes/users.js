@@ -51,7 +51,7 @@ router.post("/login", loginValidation(), validate, async (req, res) => {
 router.get("/logout", checkIfLoggedIn, (req, res) => {
   req.session.destroy(() => {
     res.clearCookie(process.env.Redis_session_name);
-    res.redirect("/home");
+    res.status(200).json({ success: true });
   });
 });
 
