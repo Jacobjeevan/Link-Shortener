@@ -1,4 +1,4 @@
-import { axiosInstance } from "../../axios";
+import { axiosInstance } from "../../utils/axios";
 
 export async function login(body) {
   let response;
