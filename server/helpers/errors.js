@@ -4,9 +4,10 @@ const handleError = (res, code, errorMsg) => {
 
   if (typeof errorMsg === "object") {
     statusCode = errorMsg.statusCode;
-    error = errorMsg;
+    const { param, msg } = errorMsg;
+    error = `${msg} - ${param}`;
   } else if (typeof errorMsg === "string") {
-    error = { msg: errorMsg };
+    error = errorMsg;
   }
 
   statusCode = code || statusCode;
@@ -14,6 +15,7 @@ const handleError = (res, code, errorMsg) => {
   console.log(error);
 
   res.status(statusCode).json({
+    success: false,
     statusCode,
     error,
   });

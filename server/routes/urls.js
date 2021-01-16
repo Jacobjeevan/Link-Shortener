@@ -27,7 +27,7 @@ router.post(
       } else {
         shortUrl = await createShortUrl(url);
       }
-      res.json({ shortUrl: shortUrl });
+      res.json({ success: true, shortUrl: shortUrl });
     } catch (error) {
       handleError(res, 400, error);
     }

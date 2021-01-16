@@ -23,7 +23,7 @@ router.post("/register", signupValidation(), validate, async (req, res) => {
       });
       req.session.user = user;
       res.locals.user = user;
-      return res.status(200).json({ user: user });
+      return res.status(200).json({ success: true, user: user });
     }
   } catch (error) {
     handleError(res, 400, error);
@@ -39,7 +39,7 @@ router.post("/login", loginValidation(), validate, async (req, res) => {
       if (await bcrypt.compare(password, user.password)) {
         req.session.user = user;
         res.locals.user = user;
-        return res.status(200).json({ user: user });
+        return res.status(200).json({ success: true, user: user });
       }
     }
     handleError(res, 403, "Username/password incorrect");
