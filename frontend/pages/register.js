@@ -1,9 +1,6 @@
-import React from 'react'
+import React from "react";
+import Register from "../components/auth/Register";
 
 export default function register() {
-    return (
-        <div>
-            <h3>Register Component</h3>
-        </div>
-    )
+  return <Register />;
 }
