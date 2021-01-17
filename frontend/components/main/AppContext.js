@@ -12,7 +12,7 @@ export function StateWrapper({ children }) {
   const [links, setLinks] = useState(defaultState.links);
 
   const setUser = (user) => {
-    localStorage.setItem("user", user);
+    localStorage.setItem("user", JSON.stringify(user));
     set(user);
   };
 
