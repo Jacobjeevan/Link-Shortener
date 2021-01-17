@@ -17,9 +17,9 @@ export function StateWrapper({ children }) {
   };
 
   useEffect(() => {
-    const foundUser = JSON.parse(localStorage.getItem("user"));
-    if (!user && foundUser) {
-      setUser(foundUser);
+    if (!user) {
+      const foundUser = JSON.parse(localStorage.getItem("user"));
+      if (foundUser) setUser(foundUser);
     }
   }, []);
 

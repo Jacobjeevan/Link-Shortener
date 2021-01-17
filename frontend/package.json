@@ -20,5 +20,10 @@
     "swr": "^0.4.0",
     "tailwindcss": "^2.0.2",
     "yup": "^0.32.8"
+  },
+  "devDependencies": {
+    "eslint": "^7.18.0",
+    "eslint-plugin-react": "^7.22.0",
+    "eslint-plugin-react-hooks": "^4.2.0"
   }
 }
