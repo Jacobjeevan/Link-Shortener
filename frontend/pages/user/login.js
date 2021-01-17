@@ -1,6 +1,13 @@
 import React from "react";
 import Login from "../../components/auth/Login";
+import { useAppContext } from "../../components/main/AppContext";
+import RedirectToHome from "../../components/utils/redirect";
 
 export default function login() {
-  return <Login />;
+  const { user } = useAppContext();
+  RedirectToHome(user);
+  if (!user) {
+    return <Login />;
+  }
+  return null;
 }

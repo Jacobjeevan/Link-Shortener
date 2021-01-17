@@ -1,9 +1,11 @@
 import { useRouter } from "next/router";
 
-function RedirectToHome() {
+function RedirectToHome(user) {
   const router = useRouter();
-  if (typeof window !== "undefined") {
-    router.push("/");
+  if (user) {
+    if (typeof window !== "undefined") {
+      router.push("/");
+    }
   }
 }
 

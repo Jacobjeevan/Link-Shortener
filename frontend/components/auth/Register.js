@@ -1,42 +1,21 @@
 import React, { Fragment } from "react";
 import { useAppContext } from "../main/AppContext";
 import { useForm } from "react-hook-form";
+import { registerResolver, submitForm } from "./AuthHelpers";
 import { register as registerUser } from "./AuthApi";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { toast } from "react-toastify";
-import RedirectToHome from "../utils/redirect";
-
-const formSchema = yup.object().shape({
-  email: yup.string().required().email(),
-  password: yup
-    .string()
-    .required()
-    .min(8, "Passwords must at least be 8 characters long"),
-  passwordConfirm: yup
-    .string()
-    .test("password-match", "Passwords do not match", function (value) {
-      return this.parent.password === value;
-    }),
-});
 
 export default function Register() {
-  const { user, setUser } = useAppContext();
+  const { setUser } = useAppContext();
   const { register, handleSubmit, errors } = useForm({
-    resolver: yupResolver(formSchema),
+    resolver: registerResolver,
   });
 
   const onSubmit = async (data) => {
-    const APIresponse = await registerUser(data);
-    const { success, user, error } = APIresponse;
-    if (success) {
+    const user = await submitForm(registerUser, data);
+    if (user) {
       setUser(user);
-    } else {
-      toast.error(error);
     }
   };
-
-  if (user) RedirectToHome();
 
   return (
     <Fragment>
