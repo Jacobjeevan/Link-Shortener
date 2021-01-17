@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { register as registerUser } from "./AuthApi";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { toast } from "react-toastify";
 import RedirectToHome from "../../utils/redirect";
 
 const formSchema = yup.object().shape({
@@ -26,7 +27,7 @@ export default function Register() {
   });
 
   const onSubmit = async (data) => {
-    const user = await registerUser(data);
+    const APIresponse = await registerUser(data);
     const { success, user, error } = APIresponse;
     if (success) {
       setUser(user);
