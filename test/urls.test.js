@@ -29,8 +29,7 @@ describe("URLs", () => {
         .end((err, res) => {
           res.should.have.status(400);
           res.body.should.have.property("error");
-          res.body.error.should.have.property("msg");
-          res.body.error.msg.should.equal("Please login first");
+          res.body.error.should.equal("Please login first");
           done();
         });
     });
@@ -113,7 +112,7 @@ describe("URLs", () => {
         });
     });
 
-    it("Should redirect a shortened url", (done) => {
+    it("Short url should return long url", (done) => {
       let shortUrl;
       agent
         .post("/shorten")
@@ -124,14 +123,14 @@ describe("URLs", () => {
           shortUrl = res.body.shortUrl;
           Url.findOne({ longUrl: urlReq.url }).then((urlEntry) => {
             res.body.shortUrl.should.equal(urlEntry.shortUrl);
-            agent
-              .get(`/${shortUrl}`)
-              .redirects(1)
-              .end((err, res) => {
-                res.should.have.status(200);
-                res.text.should.contain("My name is Jacob Jeevan.");
-                done();
-              });
+            agent.get(`/${shortUrl}`).end((err, res) => {
+              res.should.have.status(200);
+              res.body.should.have.property("success");
+              res.body.success.should.equal(true);
+              res.body.should.have.property("url");
+              res.body.url.should.equal(urlReq.url);
+              done();
+            });
           });
         });
     });
@@ -165,15 +164,14 @@ describe("URLs", () => {
               .end((err, res) => {
                 res.should.have.status(400);
                 res.body.should.have.property("error");
-                res.body.error.should.have.property("msg");
-                res.body.error.msg.should.equal("Custom Link already exists");
+                res.body.error.should.equal("Custom Link already exists");
                 done();
               });
           });
         });
     });
 
-    it("Should redirect custom Short url", (done) => {
+    it("Custom short url should return long url", (done) => {
       agent
         .post("/shorten")
         .send({ ...urlReq, customURL: true, shortUrl: "portfolio" })
@@ -182,14 +180,14 @@ describe("URLs", () => {
           res.body.should.have.property("shortUrl");
           Url.findOne({ longUrl: urlReq.url }).then((urlEntry) => {
             res.body.shortUrl.should.equal(urlEntry.shortUrl);
-            agent
-              .get("/portfolio")
-              .redirects(1)
-              .end((err, res) => {
-                res.should.have.status(200);
-                res.text.should.contain("My name is Jacob Jeevan.");
-                done();
-              });
+            agent.get("/portfolio").end((err, res) => {
+              res.should.have.status(200);
+              res.body.should.have.property("success");
+              res.body.success.should.equal(true);
+              res.body.should.have.property("url");
+              res.body.url.should.equal(urlReq.url);
+              done();
+            });
           });
         });
     });

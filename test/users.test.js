@@ -41,8 +41,7 @@ describe("Users", () => {
         .end((err, res) => {
           res.should.have.status(400);
           res.body.should.have.property("error");
-          res.body.error.should.have.property("msg");
-          res.body.error.msg.should.equal("Email is required");
+          res.body.error.should.contain("Email is required");
           done();
         });
     });
@@ -58,8 +57,7 @@ describe("Users", () => {
           .end((err, res) => {
             res.should.have.status(403);
             res.body.should.have.property("error");
-            res.body.error.should.have.property("msg");
-            res.body.error.msg.should.equal(
+            res.body.error.should.contain(
               "Email is taken - User already exists"
             );
             done();
@@ -74,8 +72,7 @@ describe("Users", () => {
         .end((err, res) => {
           res.should.have.status(400);
           res.body.should.have.property("error");
-          res.body.error.should.have.property("msg");
-          res.body.error.msg.should.equal("Please provide a proper email");
+          res.body.error.should.contain("Please provide a proper email");
           done();
         });
     });
@@ -87,8 +84,7 @@ describe("Users", () => {
         .end((err, res) => {
           res.should.have.status(400);
           res.body.should.have.property("error");
-          res.body.error.should.have.property("msg");
-          res.body.error.msg.should.equal("Password is required");
+          res.body.error.should.contain("Password is required");
           done();
         });
     });
@@ -100,8 +96,7 @@ describe("Users", () => {
         .end((err, res) => {
           res.should.have.status(400);
           res.body.should.have.property("error");
-          res.body.error.should.have.property("msg");
-          res.body.error.msg.should.equal("Password confirmation is required");
+          res.body.error.should.contain("Password confirmation is required");
           done();
         });
     });
@@ -113,8 +108,7 @@ describe("Users", () => {
         .end((err, res) => {
           res.should.have.status(400);
           res.body.should.have.property("error");
-          res.body.error.should.have.property("msg");
-          res.body.error.msg.should.equal(
+          res.body.error.should.contain(
             "Password confirmation does not match password"
           );
           done();
@@ -159,8 +153,7 @@ describe("Users", () => {
           .end((err, res) => {
             res.should.have.status(403);
             res.body.should.have.property("error");
-            res.body.error.should.have.property("msg");
-            res.body.error.msg.should.equal("Username/password incorrect");
+            res.body.error.should.contain("Username/password incorrect");
             done();
           });
       });

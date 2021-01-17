@@ -38,7 +38,7 @@ router.get("/:shortUrl", async (req, res) => {
   const { shortUrl } = req.params;
   try {
     const url = await getUrl(shortUrl);
-    if (url) res.redirect(url);
+    if (url) res.status(200).json({ success: true, url });
     else handleError(res, 404, "Url not Found");
   } catch (error) {
     handleError(res, 400, error);
