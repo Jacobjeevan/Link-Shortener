@@ -16,14 +16,14 @@ export default function Dash() {
         <p className="text-4xl">A Url Shortening Service</p>
         {user === null ? (
           <div className="container space-x-20 space-y-20">
-            <Link href="/register">
+            <Link href="/user/register">
               <a className="inline-block">
                 <h3>Register &rarr;</h3>
                 <p>If you are a new user.</p>
               </a>
             </Link>
 
-            <Link href="/login">
+            <Link href="/user/login">
               <a className="inline-block">
                 <h3>Login &rarr;</h3>
                 <p>If you are an existing user.</p>
