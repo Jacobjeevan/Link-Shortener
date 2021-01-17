@@ -5,7 +5,7 @@ import { register as registerUser } from "./AuthApi";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { toast } from "react-toastify";
-import RedirectToHome from "../../utils/redirect";
+import RedirectToHome from "../utils/redirect";
 
 const formSchema = yup.object().shape({
   email: yup.string().required().email(),
