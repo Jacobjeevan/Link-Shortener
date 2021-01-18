@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { useAppContext } from "./AppContext";
-import DashLinks from "./DashLinks";
+import DashLinks from "../links/DashLinks";
 import AuthLinks from "../auth/AuthLinks";
 
 export default function Dash() {

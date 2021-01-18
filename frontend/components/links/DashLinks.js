@@ -1,9 +1,9 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { mutate } from "swr";
-import { useAppContext } from "./AppContext";
-import { shorten, useGetLinks } from "./DashApi";
-import { formResolver, submitLink } from "./DashHelpers";
+import { useAppContext } from "../main/AppContext";
+import { shorten, useGetLinks } from "./LinksApi";
+import { formResolver, submitLink } from "./LinkHelpers";
 import Link from "next/link";
 
 export default function DashLinks() {
