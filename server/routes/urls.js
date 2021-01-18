@@ -3,6 +3,7 @@ const {
   getUrl,
   createShortUrl,
   createCustomShortUrl,
+  getAllUrls,
 } = require("../db/repo/urlsRepo");
 const { handleError } = require("../helpers/errors");
 const { checkIfLoggedIn } = require("../helpers/user.helper");
@@ -34,6 +35,18 @@ router.post(
   }
 );
 
+// fn: get all shortened urls in DB
+router.get("/all/:userId", async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const links = await getAllUrls();
+    if (links) res.status(200).json({ success: true, links });
+    else handleError(res, 404, "Links not found");
+  } catch (error) {
+    handleError(res, 400, error);
+  }
+});
+
 router.get("/:shortUrl", async (req, res) => {
   const { shortUrl } = req.params;
   try {
@@ -44,8 +57,5 @@ router.get("/:shortUrl", async (req, res) => {
     handleError(res, 400, error);
   }
 });
-
-// fn: get all shortened urls in DB
-router.get("/all", async (req, res) => {});
 
 module.exports = router;
