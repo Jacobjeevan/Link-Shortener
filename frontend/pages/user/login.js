@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Login from "../../components/auth/Login";
 import { useAppContext } from "../../components/main/AppContext";
-import RedirectToHome from "../../components/utils/redirect";
+import Router from "next/router";
 
 export default function login() {
   const { user } = useAppContext();
-  RedirectToHome(user);
-  if (!user) {
-    return <Login />;
-  }
-  return null;
+
+  useEffect(() => {
+    if (user) {
+      Router.replace("/");
+    }
+  }, [user]);
+
+  return <Login />;
 }
