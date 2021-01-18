@@ -1,38 +1,32 @@
 import Head from "next/head";
-import Link from "next/link";
 import { useAppContext } from "./AppContext";
+import DashLinks from "./DashLinks";
+import AuthLinks from "../auth/AuthLinks";
 
 export default function Dash() {
   const { user } = useAppContext();
   return (
-    <div className="container mx-auto">
+    <div>
       <Head>
         <title>Jeevan Link</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="block m-10">
-        <h1 className="text-5xl">Welcome to Jeevan Link</h1>
-        <p className="text-4xl">A Url Shortening Service</p>
-        {user === null ? (
-          <div className="container space-x-20 space-y-20">
-            <Link href="/user/register">
-              <a className="inline-block">
-                <h3>Register &rarr;</h3>
-                <p>If you are a new user.</p>
-              </a>
-            </Link>
+      <div className="flex px-8 py-3 items-stretch bg-black w-full shadow-md border-b-4 border-green-400">
+        <h1 className="flex-1 text-3xl text-white uppercase">Jeevan Link</h1>
+        <div className="flex-1 flex items-center">
+          {" "}
+          <p className="flex-1 text-sm text-right text-white">
+            A Url Shortening Service
+          </p>
+        </div>
+      </div>
 
-            <Link href="/user/login">
-              <a className="inline-block">
-                <h3>Login &rarr;</h3>
-                <p>If you are an existing user.</p>
-              </a>
-            </Link>
-          </div>
-        ) : null}
-      </main>
-
+      <div className="container mx-auto pt-10">
+        <main className="flex flex-col">
+          {user ? <DashLinks /> : <AuthLinks />}
+        </main>
+      </div>
       <footer>
         <a
           href="http://Jacobjeevan.me"
