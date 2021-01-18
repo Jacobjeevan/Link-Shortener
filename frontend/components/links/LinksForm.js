@@ -21,28 +21,25 @@ export default function LinksForm() {
       onSubmit={handleSubmit(onSubmit)}
       className="flex flex-col space-y-2 items-center"
     >
-      <div className="flex-1  p-3 mb-3 rounded-sm shadow-md">
+      <div className="p-3 mb-3 rounded-sm shadow-md">
         <h3 className="text-md">Create a new short url</h3>
       </div>
-      <div className="flex-1 flex flex-col">
-        <input
-          name="url"
-          ref={register}
-          placeholder="Destination Url"
-          className="shadow-md p-2 rounded-sm focus:ring-2 focus:ring-green-400"
-        />
-        <p className="p-2 text-sm text-gray-400">{errors.url?.message}</p>
-      </div>
 
-      <div className="flex-1 flex flex-col">
-        <input
-          name="customURL"
-          ref={register}
-          placeholder="Custom identifier"
-          className="shadow-md p-2 rounded-sm focus:ring-2 focus:ring-green-400"
-        />
-        <p className="p-2 text-sm text-gray-400">{errors.customURL?.message}</p>
-      </div>
+      <input
+        name="url"
+        ref={register}
+        placeholder="Destination Url"
+        className="shadow-md p-2 rounded-sm focus:ring-2 focus:ring-green-400"
+      />
+      <p className="text-sm text-gray-400">{errors.url?.message}</p>
+
+      <input
+        name="customURL"
+        ref={register}
+        placeholder="Custom identifier"
+        className="shadow-md p-2 rounded-sm focus:ring-2 focus:ring-green-400"
+      />
+      <p className="text-sm text-gray-400">{errors.customURL?.message}</p>
 
       <input
         type="submit"
