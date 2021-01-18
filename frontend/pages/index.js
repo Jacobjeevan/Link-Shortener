@@ -1,5 +1,6 @@
+import Main from "../components/layout/Main";
 import Dash from "../components/main/Dash";
 
 export default function Home() {
-  return <Dash />;
+  return <Main Body={Dash} />;
 }
