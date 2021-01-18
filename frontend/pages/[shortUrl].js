@@ -1,4 +1,4 @@
-import { getLongUrl } from "../components/main/DashApi";
+import { getLongUrl } from "../components/links/LinksApi";
 import { toast } from "react-toastify";
 
 const shortUrl = ({ success }) => {
