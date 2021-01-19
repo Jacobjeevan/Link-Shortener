@@ -42,4 +42,4 @@ jobs:
         with:
         # Commit message
           commit_message: Passed tests, pushing latest changes.
-          branch: backend
+          branch: main
