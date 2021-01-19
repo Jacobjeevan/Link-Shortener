@@ -1,7 +1,6 @@
 {
-  "name": "learn-starter",
-  "version": "0.1.0",
-  "private": true,
+  "name": "frontend-nextjs",
+  "version": "1.0.0",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -25,5 +24,24 @@
     "eslint": "^7.18.0",
     "eslint-plugin-react": "^7.22.0",
     "eslint-plugin-react-hooks": "^4.2.0"
-  }
+  },
+  "description": "Link Shortener Project - v1 Frontend (Next.js)",
+  "author": "Jacob John Jeevan <jeevan.jacobjohn@gmail.com>",
+  "homepage": "https://github.com/Jacobjeevan/Link-Shortener#readme",
+  "license": "ISC",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jacobjeevan/Link-Shortener.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Jacobjeevan/Link-Shortener/issues"
+  },
+  "main": "lib/frontend.js"
 }
