@@ -3,9 +3,6 @@ const express = require("express"),
   session = require("express-session"),
   Redis = require("ioredis"),
   mongoose = require("mongoose"),
-  /*MongoSanitize = require("express-mongo-sanitize"),
-  morgan = require("morgan"),
-  bcrypt = require("bcrypt"), */
   dotenv = require("dotenv"),
   UserRepo = require("./db/repo/userRepo");
 
@@ -21,11 +18,7 @@ dotenv.config({
 });
 
 let RedisStore = require("connect-redis")(session),
-  redisClient = new Redis({
-    port: process.env.Redis_session_port,
-    host: process.env.Redis_session_host,
-    db: process.env.Redis_session_db,
-  });
+  redisClient = new Redis(process.env.Redis_session_URL);
 
 redisClient.on("error", function (error) {
   console.error(error);
@@ -33,11 +26,6 @@ redisClient.on("error", function (error) {
 
 const app = express();
 const port = process.env.PORT || 5000;
-
-/* const store = new MongoDBStore({
-  uri: process.env.Mongo_URI,
-});
- */
 
 app.use(express.json());
 app.use(
