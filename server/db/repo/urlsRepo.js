@@ -12,9 +12,9 @@ async function getUrl(shortUrl) {
   }
 }
 
-async function getShortUrl(longUrl) {
+async function getShortUrl(longUrl, userId) {
   try {
-    const UrlEntry = await Url.findOne({ longUrl });
+    const UrlEntry = await Url.findOne({ longUrl, userId });
     return UrlEntry ? UrlEntry.shortUrl : null;
   } catch (error) {
     console.log(error);
@@ -22,11 +22,11 @@ async function getShortUrl(longUrl) {
   }
 }
 
-async function createShortUrl(url) {
+async function createShortUrl(url, userId) {
   try {
-    let shortUrl = await getShortUrl(url);
+    let shortUrl = await getShortUrl(url, userId);
     if (!shortUrl) {
-      shortUrl = await shortenUrl(url);
+      shortUrl = await shortenUrl(url, userId);
     }
     return shortUrl;
   } catch (error) {
@@ -35,7 +35,7 @@ async function createShortUrl(url) {
   }
 }
 
-async function createCustomShortUrl(longUrl, shortUrl) {
+async function createCustomShortUrl(longUrl, shortUrl, userId) {
   try {
     const existinglongUrl = await getUrl(shortUrl);
     if (existinglongUrl) {
@@ -44,6 +44,7 @@ async function createCustomShortUrl(longUrl, shortUrl) {
     await Url.create({
       longUrl,
       shortUrl,
+      userId,
     });
     return true;
   } catch (error) {
@@ -51,12 +52,13 @@ async function createCustomShortUrl(longUrl, shortUrl) {
   }
 }
 
-async function shortenUrl(longUrl) {
+async function shortenUrl(longUrl, userId) {
   try {
     const shortUrl = Str.random(5);
     await Url.create({
       longUrl,
       shortUrl,
+      userId,
     });
     return shortUrl;
   } catch (error) {
@@ -65,9 +67,9 @@ async function shortenUrl(longUrl) {
   }
 }
 
-async function getAllUrls() {
+async function getAllUrls(userId) {
   try {
-    return Url.find({}).exec();
+    return Url.find({ userId }).exec();
   } catch (error) {
     throw new Error(`Could not get all Urls: ${error}`);
   }
