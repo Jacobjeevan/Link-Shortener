@@ -20,15 +20,16 @@ router.post(
   validate,
   async (req, res) => {
     const { url, customURL } = req.body;
-    let { shortUrl } = req.body;
+    const { user } = req.session;
     try {
-      if (customURL && shortUrl) {
-        const custom = await createCustomShortUrl(url, shortUrl);
+      if (customURL) {
+        const custom = await createCustomShortUrl(url, customURL, user._id);
         if (!custom) return handleError(res, 400, "Custom Link already exists");
+        shortUrl = customURL;
       } else {
-        shortUrl = await createShortUrl(url);
+        shortUrl = await createShortUrl(url, user._id);
       }
-      res.json({ success: true, shortUrl: shortUrl });
+      res.json({ success: true, shortUrl });
     } catch (error) {
       handleError(res, 400, error);
     }
@@ -39,7 +40,7 @@ router.post(
 router.get("/all/:userId", async (req, res) => {
   const { userId } = req.params;
   try {
-    const links = await getAllUrls();
+    const links = await getAllUrls(userId);
     if (links) res.status(200).json({ success: true, links });
     else handleError(res, 404, "Links not found");
   } catch (error) {

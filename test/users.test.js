@@ -29,6 +29,8 @@ describe("Users", () => {
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.property("user");
+          res.body.user.should.have.property("email");
+          res.body.user.should.have.property("id");
           res.body.user.email.should.equal(userReq.email);
           done();
         });
@@ -128,16 +130,16 @@ describe("Users", () => {
           .end((err, res) => {
             res.should.have.status(200);
             res.body.should.have.property("user");
+            res.body.user.should.have.property("email");
+            res.body.user.should.have.property("id");
             res.body.user.email.should.equal(userReq.email);
-            agent
-              .get("/logout")
-              .redirects(1)
-              .end((err, res) => {
-                res.should.have.status(200);
-                res.body.should.property("success");
-                res.body.success.should.equal(true);
-                done();
-              });
+
+            agent.get("/logout").end((err, res) => {
+              res.should.have.status(200);
+              res.body.should.property("success");
+              res.body.success.should.equal(true);
+              done();
+            });
           });
       });
     });
@@ -171,17 +173,16 @@ describe("Users", () => {
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.property("user");
+          res.body.user.should.have.property("email");
+          res.body.user.should.have.property("id");
           res.body.user.email.should.equal(userReq.email);
 
-          agent
-            .get("/logout")
-            .redirects(1)
-            .end((err, res) => {
-              res.should.have.status(200);
-              res.body.should.property("success");
-              res.body.success.should.equal(true);
-              done();
-            });
+          agent.get("/logout").end((err, res) => {
+            res.should.have.status(200);
+            res.body.should.property("success");
+            res.body.success.should.equal(true);
+            done();
+          });
         });
     });
   });

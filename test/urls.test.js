@@ -8,8 +8,9 @@ const User = require("../server/db/models/user"),
   Url = require("../server/db/models/url");
 const { hashPassword } = require("../server/helpers/user.helper");
 
-const urlReq = {
+let urlReq = {
   url: "https://jacobjeevan.me/",
+  user: null,
 };
 
 const userReq = {
@@ -56,6 +57,8 @@ describe("URLs", () => {
           .end((err, res) => {
             res.should.have.status(200);
             res.body.should.have.property("user");
+            res.body.user.should.have.property("email");
+            res.body.user.should.have.property("id");
             res.body.user.email.should.equal(userReq.email);
             done();
           });
@@ -63,15 +66,12 @@ describe("URLs", () => {
     });
 
     afterEach((done) => {
-      agent
-        .get("/logout")
-        .redirects(1)
-        .end((err, res) => {
-          res.should.have.status(200);
-          res.body.should.property("success");
-          res.body.success.should.equal(true);
-          done();
-        });
+      agent.get("/logout").end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.property("success");
+        res.body.success.should.equal(true);
+        done();
+      });
     });
 
     it("Should shorten a url", (done) => {
@@ -138,7 +138,7 @@ describe("URLs", () => {
     it("Should create a custom Short url", (done) => {
       agent
         .post("/shorten")
-        .send({ ...urlReq, customURL: true, shortUrl: "portfolio" })
+        .send({ ...urlReq, customURL: "portfolio" })
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.property("shortUrl");
@@ -152,7 +152,7 @@ describe("URLs", () => {
     it("Should return error if custom Short url exists", (done) => {
       agent
         .post("/shorten")
-        .send({ ...urlReq, customURL: true, shortUrl: "portfolio" })
+        .send({ ...urlReq, customURL: "portfolio" })
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.property("shortUrl");
@@ -160,7 +160,7 @@ describe("URLs", () => {
             res.body.shortUrl.should.equal(urlEntry.shortUrl);
             agent
               .post("/shorten")
-              .send({ ...urlReq, customURL: true, shortUrl: "portfolio" })
+              .send({ ...urlReq, customURL: "portfolio" })
               .end((err, res) => {
                 res.should.have.status(400);
                 res.body.should.have.property("error");
@@ -174,7 +174,7 @@ describe("URLs", () => {
     it("Custom short url should return long url", (done) => {
       agent
         .post("/shorten")
-        .send({ ...urlReq, customURL: true, shortUrl: "portfolio" })
+        .send({ ...urlReq, customURL: "portfolio" })
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.property("shortUrl");
