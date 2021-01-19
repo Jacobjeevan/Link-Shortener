@@ -23,7 +23,7 @@ export async function getLongUrl(shortUrl) {
 
 export function useGetLinks(shouldFetch, user) {
   const fetcher = () =>
-    axiosInstance.get(`/all/${user._id}`).then((res) => res.data);
+    axiosInstance.get(`/all/${user.id}`).then((res) => res.data);
   const { data, error } = useSWR(shouldFetch ? "links" : null, fetcher);
   let links = null;
   if (data) {

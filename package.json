@@ -3,8 +3,9 @@
   "description": "Jeevan Link - Link Shortener Project",
   "scripts": {
     "bootstrap": "lerna bootstrap --hoist --force-local",
-    "build": "lerna run build --scope frontend",
-    "clean": "lerna run clean"
+    "build:frontend": "lerna run build --scope frontend-nextjs",
+    "clean": "lerna run clean",
+    "dev": "lerna run --parallel dev"
   },
   "private": true,
   "devDependencies": {
