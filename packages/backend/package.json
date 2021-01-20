@@ -5,7 +5,8 @@
 	"main": "server/app.js",
 	"scripts": {
 		"dev": "NODE_ENV=dev nodemon",
-    	"test": "NODE_ENV=test mocha --timeout 10000 --exit"
+		"test": "NODE_ENV=test mocha --timeout 10000 --exit",
+		"start": "NODE_ENV=production node server/app.js"
 	},
 	"keywords": [],
 	"author": "Jacob John Jeevan",

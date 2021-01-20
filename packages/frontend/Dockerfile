@@ -1,14 +1,15 @@
 FROM node:14
 
-WORKDIR /backend
+WORKDIR /frontend
 
 COPY package*.json ./
 
 RUN npm ci --only=production
-RUN npm i nodemon
 
-COPY . ./backend
+COPY . ./frontend
 
 EXPOSE 5000
 
-RUN ["npm", "run", "dev"]
+RUN npm run build
+
+RUN ["npm", "run", "start"]
