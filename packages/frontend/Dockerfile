@@ -1,12 +1,12 @@
 FROM node:14
 
-WORKDIR /frontend
+WORKDIR /packages/frontend
 
 COPY package*.json ./
 
 RUN npm ci --only=production
 
-COPY . ./frontend
+COPY . .
 
 EXPOSE 5000
 
