@@ -7,7 +7,7 @@
     "RUN npm ci --only=production",
     "COPY /packages/frontend .",
     "EXPOSE 5001",
-    "RUN npm run build"
+    "RUN npm run build",
     "CMD [ \"npm\", \"run\", \"start\" ]"
 ]
 }
