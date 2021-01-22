@@ -59,4 +59,10 @@ router.get("/logout", checkIfLoggedIn, (req, res) => {
   });
 });
 
+router.get("/user", ({ session }, res) => {
+  const { user } = session;
+  if (user) return res.status(200).json({ success: true, user: getUser(user) });
+  return res.status(200).json({ success: false });
+});
+
 module.exports = router;
