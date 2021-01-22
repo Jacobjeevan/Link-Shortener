@@ -33,15 +33,11 @@
     "lib": "lib",
     "test": "__tests__"
   },
-  "files": [
-    "lib"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Jacobjeevan/Link-Shortener.git"
   },
   "bugs": {
     "url": "https://github.com/Jacobjeevan/Link-Shortener/issues"
-  },
-  "main": "lib/frontend.js"
+  }
 }

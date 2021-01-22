@@ -8,8 +8,9 @@ RUN npm ci --only=production
 
 COPY . .
 
-EXPOSE 5000
+EXPOSE 5001
 
 RUN npm run build
 
-RUN ["npm", "run", "start"]
+# Remove line below if running from docker-compose
+CMD ["npm", "run", "start"]
