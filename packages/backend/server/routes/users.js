@@ -12,6 +12,7 @@ const {
   checkIfLoggedIn,
   getUser,
 } = require("../helpers/user.helper");
+const logger = require("../helpers/logger");
 
 router.post("/register", signupValidation(), validate, async (req, res) => {
   const { email, password } = req.body;
@@ -25,6 +26,7 @@ router.post("/register", signupValidation(), validate, async (req, res) => {
         email: email.toLowerCase(),
         password: hashedPass,
       });
+      logger.info("User created");
       req.session.user = user;
       res.locals.user = user;
       return res.status(200).json({ success: true, user: getUser(user) });
@@ -37,13 +39,18 @@ router.post("/register", signupValidation(), validate, async (req, res) => {
 router.post("/login", loginValidation(), validate, async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await getUserByEmail(email.toLowerCase());
+    let user = await getUserByEmail(email.toLowerCase());
 
     if (user) {
       if (await bcrypt.compare(password, user.password)) {
         req.session.user = user;
         res.locals.user = user;
-        return res.status(200).json({ success: true, user: getUser(user) });
+        user = getUser(user);
+        logger.info("User logged in", {
+          type: "user_login",
+          email: user.email,
+        });
+        return res.status(200).json({ success: true, user });
       }
     }
     handleError(res, 403, "Username/password incorrect");
@@ -53,7 +60,12 @@ router.post("/login", loginValidation(), validate, async (req, res) => {
 });
 
 router.get("/logout", checkIfLoggedIn, (req, res) => {
+  const { user } = req.session;
   req.session.destroy(() => {
+    logger.info("User logout", {
+      type: "user_logout",
+      email: user.email,
+    });
     res.clearCookie(process.env.Redis_session_name);
     res.status(200).json({ success: true });
   });
@@ -61,7 +73,13 @@ router.get("/logout", checkIfLoggedIn, (req, res) => {
 
 router.get("/user", ({ session }, res) => {
   const { user } = session;
-  if (user) return res.status(200).json({ success: true, user: getUser(user) });
+  if (user) {
+    logger.info("User fetch", {
+      type: "user_fetch",
+      email: user.email,
+    });
+    return res.status(200).json({ success: true, user: getUser(user) });
+  }
   return res.status(200).json({ success: false });
 });
 

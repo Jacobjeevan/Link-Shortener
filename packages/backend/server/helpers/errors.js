@@ -1,3 +1,5 @@
+const logger = require("./logger");
+
 const handleError = (res, code, errorMsg) => {
   let statusCode = 400;
   let error;
@@ -12,7 +14,7 @@ const handleError = (res, code, errorMsg) => {
 
   statusCode = code || statusCode;
 
-  console.log(error);
+  logger.error(error);
 
   res.status(statusCode).json({
     success: false,

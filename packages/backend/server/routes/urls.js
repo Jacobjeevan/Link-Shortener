@@ -12,6 +12,7 @@ const {
   validate,
 } = require("./validations/url.validations");
 const path = require("path");
+const logger = require("../helpers/logger");
 
 router.post(
   "/shorten",
@@ -26,8 +27,16 @@ router.post(
         const custom = await createCustomShortUrl(url, customURL, user._id);
         if (!custom) return handleError(res, 400, "Custom Link already exists");
         shortUrl = customURL;
+        logger.info("Created custom short url", {
+          type: "shorten_url_custom",
+          shortUrl,
+        });
       } else {
         shortUrl = await createShortUrl(url, user._id);
+        logger.info("Created short url", {
+          type: "shorten_url",
+          shortUrl,
+        });
       }
       res.json({ success: true, shortUrl });
     } catch (error) {
@@ -52,8 +61,14 @@ router.get("/:shortUrl", async (req, res) => {
   const { shortUrl } = req.params;
   try {
     const url = await getUrl(shortUrl);
-    if (url) res.status(200).json({ success: true, url });
-    else handleError(res, 404, "Url not Found");
+    if (url) {
+      logger.info("Fetching long url", {
+        type: "fetch_long_url",
+        shortUrl,
+        url,
+      });
+      res.status(200).json({ success: true, url });
+    } else handleError(res, 404, "Url not Found");
   } catch (error) {
     handleError(res, 400, error);
   }

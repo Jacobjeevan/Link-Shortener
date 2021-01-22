@@ -24,6 +24,7 @@
 		"express-session": "^1.17.1",
 		"express-validator": "^6.6.1",
 		"ioredis": "^4.19.2",
+		"log4js": "^6.3.0",
 		"mongoose": "^5.10.15",
 		"morgan": "^1.10.0"
 	},

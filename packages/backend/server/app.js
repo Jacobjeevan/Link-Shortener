@@ -4,7 +4,10 @@ const express = require("express"),
   Redis = require("ioredis"),
   mongoose = require("mongoose"),
   dotenv = require("dotenv"),
-  UserRepo = require("./db/repo/userRepo");
+  UserRepo = require("./db/repo/userRepo"),
+  morgan = require("morgan"),
+  log4js = require("log4js"),
+  logger = require("./helpers/logger");
 
 let configPath = "./config/.env.prod";
 
@@ -51,6 +54,12 @@ app.use(
     },
   })
 );
+
+if (process.env.NODE_ENV === "dev") {
+  app.use(morgan("dev"));
+}
+
+app.use(log4js.connectLogger(logger, { level: "info" }));
 
 app.use(async (req, res, next) => {
   const { user } = req.session;
