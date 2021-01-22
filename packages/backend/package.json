@@ -25,6 +25,7 @@
 		"express-validator": "^6.6.1",
 		"ioredis": "^4.19.2",
 		"log4js": "^6.3.0",
+		"log4js-logstash-tcp": "^2.0.0",
 		"mongoose": "^5.10.15",
 		"morgan": "^1.10.0"
 	},
