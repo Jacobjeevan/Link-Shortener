@@ -1,5 +1,6 @@
 import { axiosInstance } from "../utils/axios";
 import useSWR from "swr";
+import axios from "axios";
 
 export async function shorten(body) {
   let response;
@@ -14,7 +15,7 @@ export async function shorten(body) {
 export async function getLongUrl(shortUrl) {
   let response;
   try {
-    response = await axiosInstance.get(`/${shortUrl}`);
+    response = await axios.get(`${process.env.BACKEND_URL}/${shortUrl}`);
   } catch (error) {
     response = error.response;
   }

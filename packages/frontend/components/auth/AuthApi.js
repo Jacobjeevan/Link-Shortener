@@ -29,3 +29,13 @@ export async function register(body) {
   }
   return response.data;
 }
+
+export async function getUser() {
+  let response;
+  try {
+    response = await axiosInstance.get("user/");
+  } catch (error) {
+    response = error.response;
+  }
+  return response.data;
+}

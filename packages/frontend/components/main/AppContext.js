@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
+import { getUser } from "../auth/AuthApi";
 
 export const defaultState = {
   user: null,
@@ -10,15 +11,18 @@ export function StateWrapper({ children }) {
   const [user, set] = useState(defaultState.user);
 
   const setUser = (user) => {
-    localStorage.setItem("user", JSON.stringify(user));
     set(user);
   };
 
   useEffect(() => {
-    if (!user) {
-      const foundUser = JSON.parse(localStorage.getItem("user"));
-      if (foundUser) setUser(foundUser);
+    async function fetchUser() {
+      if (!user) {
+        const APIresponse = await getUser();
+        const { success, user } = APIresponse;
+        if (success) setUser(user);
+      }
     }
+    fetchUser();
   }, []);
 
   return (
