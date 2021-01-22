@@ -1,4 +1,13 @@
- {
+{
   "schemaVersion": 2,
-  "dockerfilePath": "packages/frontend/Dockerfile"
- }
+  "dockerfileLines": [
+    "FROM node:14",
+    "WORKDIR /packages/frontend",
+    "COPY /packages/frontend/package*.json ./",
+    "RUN npm ci --only=production",
+    "COPY /packages/frontend .",
+    "EXPOSE 5001",
+    "RUN npm run build"
+    "CMD [ \"npm\", \"run\", \"start\" ]"
+]
+}
