@@ -21,7 +21,7 @@ dotenv.config({
 });
 
 let RedisStore = require("connect-redis")(session),
-  redisClient = new Redis(REDIS_URL);
+  redisClient = new Redis(process.env.REDIS_URL);
 
 redisClient.on("error", function (error) {
   console.error(error);

@@ -12,4 +12,4 @@ COPY . .
 EXPOSE 5000
 
 # Remove line below if running from docker-compose
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "start"]
