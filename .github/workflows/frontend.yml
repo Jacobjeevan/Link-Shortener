@@ -1,19 +1,19 @@
 # This is a basic workflow to help you get started with Actions
 
-name: backend
+name: frontend
 
 # Controls when the action will run.
 on:
-  # Triggers the workflow on push or pull request events but only for the backend branch
+  # Triggers the workflow on push or pull request events but only for the frontend branch
   push:
     branches: [main]
     paths:
-      - "packages/backend/**"
+      - "packages/frontend/**"
 
   pull_request:
     branches: [main]
     paths:
-      - "packages/backend/**"
+      - "packages/frontend/**"
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: "./packages/backend/"
+        working-directory: "./packages/frontend/"
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -37,9 +37,10 @@ jobs:
         uses: actions/setup-node@v2.1.4
 
       - run: npm ci
-      - run: sudo docker-compose -f docker-compose-test.yml up -d
+      - run: sudo docker-compose -f docker-compose.yml up -d
       - run: npm run build --if-present
-      - run: npm test
+      # Need to add frontend tests
+      # - run: npm test
 
       - name: Git Auto Commit
         uses: stefanzweifel/git-auto-commit-action@v4.6.0
@@ -57,10 +58,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Push backend to dokku
+      - name: Push frontend to dokku
         uses: dokku/github-action@v1.0.1
         with:
           branch: main
-          git_remote_url: "ssh://dokku@ente-dokku.jeevan.link/backendv1"
+          git_remote_url: "ssh://dokku@ente-dokku.jeevan.link/frontend-nextjs"
           ssh_host_key: ${{ secrets.SSH_HOST_KEY }}
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}

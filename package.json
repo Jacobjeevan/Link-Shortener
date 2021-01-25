@@ -6,8 +6,10 @@
     "build:frontend": "lerna run build --scope frontend-nextjs",
     "clean": "lerna run clean",
     "dev": "lerna run --parallel dev",
-    "frontend": "lerna run dev --scope frontend-nextjs",
-    "backend": "lerna run dev --scope backend-nodejs"
+    "frontend": "lerna run start --scope frontend-nextjs --parallel",
+    "backend": "lerna run start --scope backend-nodejs --parallel",
+    "dev-backend": "lerna run dev --scope backend-nodejs --parallel",
+    "dev-frontend": "lerna run dev --scope frontend-nextjs --parallel"
   },
   "private": true,
   "devDependencies": {
