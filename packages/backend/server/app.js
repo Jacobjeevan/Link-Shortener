@@ -21,9 +21,7 @@ dotenv.config({
 });
 
 let RedisStore = require("connect-redis")(session),
-  redisClient = new Redis(process.env.Redis_port, process.env.Redis_host, {
-    password: process.env.Redis_password,
-  });
+  redisClient = new Redis(REDIS_URL);
 
 redisClient.on("error", function (error) {
   console.error(error);
@@ -81,7 +79,7 @@ app.listen(port, () => {
   console.log(`Server is currently running on the port: ${port}`);
 });
 
-mongoose.connect(process.env.Mongo_URI, {
+mongoose.connect(process.env.MONGO_URL, {
   useUnifiedTopology: true,
   useNewUrlParser: true,
   useCreateIndex: true,
