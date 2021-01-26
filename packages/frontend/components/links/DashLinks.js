@@ -1,17 +1,20 @@
 import React, { forwardRef } from "react";
 import { useAppContext } from "../main/AppContext";
-import { useGetLinks } from "./LinksApi";
-import Link from "next/link";
+import { deleteShortUrl, useGetLinks } from "./LinksApi";
 import LinksForm from "./LinksForm";
 import { useRouter } from "next/router";
 
 export default function DashLinks() {
   const { user } = useAppContext();
-  const { links, fetchError, isLoading } = useGetLinks(Boolean(user), user);
+  const { links, fetchError, isLoading, mutate } = useGetLinks(Boolean(user));
   const router = useRouter();
 
   if (isLoading) {
     return <p>Loading...</p>;
+  }
+
+  if (fetchError) {
+    return <p>Error loading data, try refreshing the page.</p>;
   }
 
   return (
@@ -34,7 +37,13 @@ export default function DashLinks() {
                 >
                   Open
                 </button>
-                <button className="flex-1 bg-red-400 h-full p-2 hover:bg-red-500">
+                <button
+                  onClick={async () => {
+                    await deleteShortUrl(UrlEntry._id);
+                    mutate();
+                  }}
+                  className="flex-1 bg-red-400 h-full p-2 hover:bg-red-500"
+                >
                   Delete
                 </button>
               </div>

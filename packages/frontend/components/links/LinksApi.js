@@ -22,13 +22,22 @@ export async function getLongUrl(shortUrl) {
   return response.data;
 }
 
-export function useGetLinks(shouldFetch, user) {
-  const fetcher = () =>
-    axiosInstance.get(`/all/${user.id}`).then((res) => res.data);
-  const { data, error } = useSWR(shouldFetch ? "links" : null, fetcher);
+export function useGetLinks(shouldFetch) {
+  const fetcher = () => axiosInstance.get("/all/").then((res) => res.data);
+  const { data, error, mutate } = useSWR(shouldFetch ? "links" : null, fetcher);
   let links = null;
   if (data) {
     links = data.links;
   }
-  return { links, fetchError: error, isLoading: !error && !links };
+  return { links, fetchError: error, isLoading: !error && !links, mutate };
+}
+
+export async function deleteShortUrl(urlId) {
+  let response;
+  try {
+    response = await axiosInstance.post("/delete", { urlId });
+  } catch (error) {
+    response = error.response;
+  }
+  return response.data;
 }

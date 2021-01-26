@@ -5,7 +5,7 @@ import { formResolver, submitLink } from "./LinkHelpers";
 import { mutate } from "swr";
 
 export default function LinksForm() {
-  const { register, handleSubmit, errors } = useForm({
+  const { register, handleSubmit, errors, reset } = useForm({
     resolver: formResolver,
   });
 
@@ -14,6 +14,7 @@ export default function LinksForm() {
     if (link) {
       mutate("links");
     }
+    reset();
   };
 
   return (
