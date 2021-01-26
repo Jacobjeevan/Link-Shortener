@@ -2,7 +2,7 @@
   "name": "frontend-nextjs",
   "version": "1.0.0",
   "scripts": {
-    "dev": "nodemon",
+    "dev": "next dev -p 5001",
     "build": "next build",
     "start": "next start -p 5001"
   },
@@ -23,8 +23,7 @@
   "devDependencies": {
     "eslint": "^7.18.0",
     "eslint-plugin-react": "^7.22.0",
-    "eslint-plugin-react-hooks": "^4.2.0",
-    "nodemon": "^2.0.7"
+    "eslint-plugin-react-hooks": "^4.2.0"
   },
   "description": "Link Shortener Project - v1 Frontend (Next.js)",
   "author": "Jacob John Jeevan <jeevan.jacobjohn@gmail.com>",
