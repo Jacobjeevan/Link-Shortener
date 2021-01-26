@@ -10,6 +10,15 @@ const postShortenValidation = () => {
   ];
 };
 
+const deleteShortUrlValidation = () => {
+  return [
+    body("urlId", "Please provide a url Id to delete")
+      .notEmpty()
+      .isString()
+      .trim(),
+  ];
+};
+
 const validate = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -18,4 +27,8 @@ const validate = (req, res, next) => {
   next();
 };
 
-module.exports = { postShortenValidation, validate };
+module.exports = {
+  postShortenValidation,
+  validate,
+  deleteShortUrlValidation,
+};

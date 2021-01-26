@@ -1,6 +1,5 @@
 const Str = require("@supercharge/strings"),
   Url = require("../models/url");
-const { handleError } = require("../../helpers/errors");
 
 async function getUrl(shortUrl) {
   try {
@@ -75,4 +74,18 @@ async function getAllUrls(userId) {
   }
 }
 
-module.exports = { getUrl, createShortUrl, getAllUrls, createCustomShortUrl };
+async function deleteShortUrl(urlId) {
+  try {
+    return Url.findByIdAndDelete(urlId).exec();
+  } catch (error) {
+    throw new Error(`Could not get all Urls: ${error}`);
+  }
+}
+
+module.exports = {
+  getUrl,
+  createShortUrl,
+  getAllUrls,
+  createCustomShortUrl,
+  deleteShortUrl,
+};

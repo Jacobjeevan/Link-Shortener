@@ -57,6 +57,22 @@ router.get("/all/:userId", async (req, res) => {
   }
 });
 
+router.post(
+  "/delete/",
+  checkIfLoggedIn,
+  deleteShortUrlValidation(),
+  validate,
+  async (req, res) => {
+    const { urlId } = req.body;
+    try {
+      await urlsRepo.deleteShortUrl(urlId);
+      res.status(200).json({ success: true });
+    } catch (error) {
+      handleError(res, 400, error);
+    }
+  }
+);
+
 router.get("/:shortUrl", async (req, res) => {
   const { shortUrl } = req.params;
   try {
