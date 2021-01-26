@@ -34,6 +34,15 @@ describe("URLs", () => {
           done();
         });
     });
+
+    it("Delete short URL - Should return an Error", (done) => {
+      agent.post("/delete/").end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.have.property("error");
+        res.body.error.should.equal("Please login first");
+        done();
+      });
+    });
   });
 
   describe("Authenticated User", () => {
@@ -192,12 +201,48 @@ describe("URLs", () => {
         });
     });
 
-    /* it("Should GET all shortened url/original url pairs", (done) => {
-      agent.get("/all").end((err, res) => {
-        console.log(res.body);
-        res.should.have.status(200);
-        done();
-      });
-    }); */
+    it("Should GET a user's short Urls", (done) => {
+      agent
+        .post("/shorten")
+        .send({ ...urlReq, customURL: "portfolio" })
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.have.property("shortUrl");
+          agent.get("/all/").end((err, res) => {
+            res.should.have.status(200);
+            res.body.should.have.property("success");
+            res.body.success.should.equal(true);
+            res.body.should.have.property("links");
+            res.body.links.should.have.length(1);
+            res.body.links[0].shortUrl.should.equal("portfolio");
+            done();
+          });
+        });
+    });
+
+    it("Should delete shortUrl", (done) => {
+      agent
+        .post("/shorten")
+        .send({ ...urlReq, customURL: "portfolio" })
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.have.property("shortUrl");
+          Url.findOne({ shortUrl: "portfolio" }).then((UrlEntry) => {
+            agent
+              .post("/delete/")
+              .send({ urlId: UrlEntry._id })
+              .end((err, resDelete) => {
+                resDelete.should.have.status(200);
+                resDelete.body.should.have.property("success");
+                resDelete.body.success.should.equal(true);
+                Url.findOne({ shortUrl: "portfolio" }).then((shouldBeNull) => {
+                  if (shouldBeNull === null) {
+                    done();
+                  }
+                });
+              });
+          });
+        });
+    });
   });
 });
