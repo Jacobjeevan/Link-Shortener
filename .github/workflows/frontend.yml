@@ -64,3 +64,4 @@ jobs:
           branch: main
           git_remote_url: "ssh://dokku@ente-dokku.jeevan.link/frontend-nextjs"
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          git_push_flags: --force
