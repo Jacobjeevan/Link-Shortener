@@ -11,7 +11,13 @@ This repo holds Link Shortener project.
 
 #### Deployments :rocket:
 
-None yet.
+- v1: [Jeevan Link](https://www.jeevan.link)
+
+What's new?
+
+- Switched to Dokku for deployment
+- Easy integration with Github workflows for CI/CD
+- Tailwind CSS for frontend
 
 ### Versions
 
