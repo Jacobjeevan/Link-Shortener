@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { shorten } from "./LinksApi";
 import { formResolver, submitLink } from "./LinkHelpers";
 import { mutate } from "swr";
-import { IShortenAPI } from "./links";
+import { IShortenAPI } from "./types/shorten";
 
 export default function LinksForm(): JSX.Element {
   const { register, handleSubmit, errors, reset } = useForm({

@@ -1,15 +1,10 @@
 import { axiosInstance } from "../utils/axios";
 import useSWR from "swr";
 import axios, { AxiosResponse } from "axios";
-import {
-  IShortenAPI,
-  IDeleteResponse,
-  IGetUrlResponse,
-  IShortenResponse,
-  ILink,
-  IGetLinksResponse,
-  IGetLinksAxiosResponse,
-} from "./links";
+import { IShortenAPI, IShortenResponse } from "./types/shorten";
+import { IDeleteResponse } from "./types/deleteLink";
+import { IGetLongUrlResponse } from "./types/getLongUrl";
+import { ILink, IGetLinksResponse, IGetLinksAxiosResponse } from "./types/getLinks";
 
 export async function shorten(body: IShortenAPI): Promise<IShortenResponse> {
   let response: AxiosResponse<IShortenResponse>;
@@ -21,10 +16,10 @@ export async function shorten(body: IShortenAPI): Promise<IShortenResponse> {
   return response.data;
 }
 
-export async function getLongUrl(shortUrl: string): Promise<IGetUrlResponse> {
-  let response: AxiosResponse<IGetUrlResponse>;
+export async function getLongUrl(shortUrl: string): Promise<IGetLongUrlResponse> {
+  let response: AxiosResponse<IGetLongUrlResponse>;
   try {
-    response = await axios.get<IGetUrlResponse>(`${process.env.BACKEND_URL}/${shortUrl}`);
+    response = await axios.get<IGetLongUrlResponse>(`${process.env.BACKEND_URL}/${shortUrl}`);
   } catch (error) {
     response = error.response;
   }
