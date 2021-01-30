@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 
-export default function AuthLinks() {
+export default function AuthLinks(): JSX.Element {
   return (
     <div className="container flex space-x-20 items-center">
       <Link href="/user/register">

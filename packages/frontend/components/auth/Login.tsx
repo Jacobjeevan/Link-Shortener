@@ -3,14 +3,15 @@ import { useAppContext } from "../main/AppContext";
 import { useForm } from "react-hook-form";
 import { loginResolver, submitForm } from "./AuthHelpers";
 import { login } from "./AuthApi";
+import { IAuth } from "./auth";
 
-export default function Login() {
+export default function Login(): JSX.Element {
   const { setUser } = useAppContext();
   const { register, handleSubmit, errors } = useForm({
     resolver: loginResolver,
   });
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: IAuth) => {
     const user = await submitForm(login, data);
     if (user) {
       setUser(user);
@@ -19,10 +20,7 @@ export default function Login() {
 
   return (
     <Fragment>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col space-y-2 items-center"
-      >
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col space-y-2 items-center">
         <div className="p-3 mb-3 rounded-sm shadow-md">
           <h3 className="text-md">Login to shorten urls</h3>
         </div>

@@ -3,14 +3,15 @@ import { useAppContext } from "../main/AppContext";
 import { useForm } from "react-hook-form";
 import { registerResolver, submitForm } from "./AuthHelpers";
 import { register as registerUser } from "./AuthApi";
+import { IAuth } from "./auth";
 
-export default function Register() {
+export default function Register(): JSX.Element {
   const { setUser } = useAppContext();
   const { register, handleSubmit, errors } = useForm({
     resolver: registerResolver,
   });
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: IAuth) => {
     const user = await submitForm(registerUser, data);
     if (user) {
       setUser(user);
@@ -19,10 +20,7 @@ export default function Register() {
 
   return (
     <Fragment>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col space-y-2 items-center"
-      >
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col space-y-2 items-center">
         <div className="p-3 mb-3 rounded-sm shadow-md">
           <h3 className="text-md">Register to shorten urls</h3>
         </div>
@@ -50,9 +48,7 @@ export default function Register() {
           type="password"
           className="shadow-md p-2 rounded-sm focus:ring-2 focus:ring-green-400"
         />
-        <p className="text-sm text-gray-400">
-          {errors.passwordConfirm?.message}
-        </p>
+        <p className="text-sm text-gray-400">{errors.passwordConfirm?.message}</p>
 
         <input
           type="submit"

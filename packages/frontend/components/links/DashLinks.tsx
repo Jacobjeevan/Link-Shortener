@@ -1,10 +1,10 @@
-import React, { forwardRef } from "react";
+import React from "react";
 import { useAppContext } from "../main/AppContext";
 import { deleteShortUrl, useGetLinks } from "./LinksApi";
 import LinksForm from "./LinksForm";
 import { useRouter } from "next/router";
 
-export default function DashLinks() {
+export default function DashLinks(): JSX.Element {
   const { user } = useAppContext();
   const { links, fetchError, isLoading, mutate } = useGetLinks(Boolean(user));
   const router = useRouter();

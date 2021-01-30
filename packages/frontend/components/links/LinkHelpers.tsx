@@ -1,6 +1,7 @@
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
+import { IShortenAPI, LinksFn } from "./links";
 
 const formSchema = yup.object().shape({
   url: yup.string().required().url(),
@@ -9,7 +10,7 @@ const formSchema = yup.object().shape({
 
 export const formResolver = yupResolver(formSchema);
 
-export async function submitLink(callAPI, data) {
+export async function submitLink(callAPI: LinksFn, data: IShortenAPI): Promise<string | null> {
   const APIresponse = await callAPI(data);
   const { success, shortUrl, error } = APIresponse;
   if (success) {
