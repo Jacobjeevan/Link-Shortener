@@ -3,7 +3,7 @@ import { useAppContext } from "../main/AppContext";
 import { useForm } from "react-hook-form";
 import { loginResolver, submitForm } from "./AuthHelpers";
 import { login } from "./AuthApi";
-import { IAuth } from "./auth";
+import { IAuth } from "./types/auth";
 
 export default function Login(): JSX.Element {
   const { setUser } = useAppContext();

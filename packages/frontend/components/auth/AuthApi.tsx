@@ -1,6 +1,6 @@
 import { axiosInstance } from "../utils/axios";
 import { AxiosResponse } from "axios";
-import { IAuth, IAuthResponse } from "./auth";
+import { IAuth, IAuthResponse } from "./types/auth";
 
 export async function login(loginInfo: IAuth): Promise<IAuthResponse> {
   let response: AxiosResponse<IAuthResponse>;

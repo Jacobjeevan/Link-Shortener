@@ -1,7 +1,7 @@
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
-import { IAuth, AuthFn, IUser, IAuthResponse } from "./auth";
+import { IAuth, AuthFn, IUser, IAuthResponse } from "./types/auth";
 
 const registerFormSchema = yup.object().shape({
   email: yup.string().required().email(),
