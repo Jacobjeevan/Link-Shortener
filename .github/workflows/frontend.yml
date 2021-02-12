@@ -49,6 +49,7 @@ jobs:
           branch: main
 
   deploy:
+    if: github.ref == 'refs/heads/main'
     needs: [build]
     runs-on: ubuntu-latest
     steps:
