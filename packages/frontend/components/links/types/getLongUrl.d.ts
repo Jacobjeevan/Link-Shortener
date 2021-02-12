@@ -1,5 +1,5 @@
 export interface IGetLongUrlResponse {
   success: boolean;
-  longUrl: string;
+  url: string;
   error?: string;
 }

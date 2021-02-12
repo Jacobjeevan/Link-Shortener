@@ -1,14 +1,19 @@
 import { getLongUrl } from "../components/links/LinksApi";
 import { toast } from "react-toastify";
+import { GetServerSideProps } from "next";
 
-const shortUrl = ({ success }) => {
+interface shortUrlProps {
+  success: boolean;
+}
+
+const shortUrl = ({ success }: shortUrlProps): null => {
   if (!success) {
     toast.error("Url not found");
   }
   return null;
 };
 
-export async function getServerSideProps(context) {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const { shortUrl } = context.params;
 
   const APIresponse = await getLongUrl(shortUrl);
@@ -26,6 +31,6 @@ export async function getServerSideProps(context) {
       success: false,
     },
   };
-}
+};
 
 export default shortUrl;
