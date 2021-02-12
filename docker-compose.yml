@@ -1,0 +1,62 @@
+version: "3.1"
+
+services:
+  backend:
+    build:
+      context: packages/backend/
+      dockerfile: Dockerfile
+    command: npm run start
+    volumes:
+      - .:/backend/
+      - /backend/node_modules
+    ports:
+      - 5000:5000
+    depends_on:
+      - mongo
+      - redis
+    networks:
+      - frontend
+      - backend
+    env_file:
+      - ./packages/backend/config/.env.prod
+
+  mongo:
+    image: mongo
+    restart: unless-stopped
+    ports:
+      - 27020:27017
+    volumes:
+      - jeevanlink_mongo:/data/db
+    networks:
+      - backend
+
+  redis:
+    image: redis
+    container_name: redis-session
+    restart: unless-stopped
+    ports:
+      - 6381:6379
+    networks:
+      - backend
+
+  frontend:
+    build:
+      context: packages/frontend/
+      dockerfile: Dockerfile
+    volumes:
+      - .:/frontend/
+      - /frontend/node_modules
+    ports:
+      - 5001:5001
+    networks:
+      - frontend
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+
+volumes:
+  jeevanlink_mongo:
+  jeevanlink_redis:
