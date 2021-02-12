@@ -2,11 +2,17 @@ FROM node:14
 
 WORKDIR /packages/frontend
 
+ARG NEXT_PUBLIC_BACKEND_URL 
+ARG BACKEND_URL
+
 COPY package*.json ./
 
-RUN npm ci --only=production
+RUN npm ci
 
 COPY . .
+
+RUN echo "NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL}" >> .env.production
+RUN echo "BACKEND_URL=${BACKEND_URL}" >> .env.production
 
 EXPOSE 5001
 
