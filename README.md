@@ -23,16 +23,17 @@ What's new?
 
 #### V1
 
-- Backend: Node.js
-- Frontend: Next.js
+- [x] Backend: Node.js
+- [x] Frontend: Next.js
 
 ###### V1.1
 
-- Backend: Node.js with Typescript
+- [x] Frontend: Next.js with Typescript
+- [ ] Backend: Node.js with Typescript
 
 #### V2
 
-- Java (TBD)
+- [ ] Backend: Java (Spring Boot)
 
 #### V3
 
