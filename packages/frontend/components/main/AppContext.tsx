@@ -1,11 +1,11 @@
 import React, { useState, useContext, useEffect } from "react";
 import { getUser } from "../auth/AuthApi";
-import { IAuthResponse, IUser } from "../auth/auth";
+import { IAuthResponse, IUser } from "../auth/types/auth";
 import { IAppProps, IAppContext, setStateUser } from "./main";
 
 const AppContext = React.createContext<IAppContext | undefined>(undefined);
 
-export function StateWrapper(props: IAppProps) {
+export function StateWrapper(props: IAppProps): JSX.Element {
   const [user, set] = useState<IUser | null>(null);
 
   const setUser = (user: setStateUser) => {
@@ -21,7 +21,7 @@ export function StateWrapper(props: IAppProps) {
       }
     }
     fetchUser();
-  }, []);
+  }, [user]);
 
   return <AppContext.Provider value={{ user, setUser }}>{props.children}</AppContext.Provider>;
 }
