@@ -14,17 +14,19 @@ const shortUrl = ({ success }: shortUrlProps): null => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { shortUrl } = context.params;
+  if (context.params) {
+    const { shortUrl } = context.params;
 
-  const APIresponse = await getLongUrl(shortUrl);
-  const { success, url } = APIresponse;
-  if (success) {
-    return {
-      redirect: {
-        destination: url,
-        permanent: true,
-      },
-    };
+    const APIresponse = await getLongUrl(shortUrl as string);
+    const { success, url } = APIresponse;
+    if (success) {
+      return {
+        redirect: {
+          destination: url,
+          permanent: true,
+        },
+      };
+    }
   }
   return {
     props: {
