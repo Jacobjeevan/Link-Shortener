@@ -10,13 +10,15 @@ export default function Header(): JSX.Element {
     setUser(null);
   };
   return (
-    <div className="flex px-8 py-3 items-stretch bg-black w-full shadow-md border-b-4 border-green-400">
-      <h1 className="flex-1 ml-10 text-3xl text-white uppercase">Jeevan Link</h1>
+    <div className="flex px-8 py-3 w-full space-x-5 text-black">
+      <div className="flex-1 ml-10 text-right">
+        <h1 className="text-3xl uppercase font-bold">Jeevan Link</h1>
+      </div>
       <div className="flex-1 mr-10 flex items-center">
-        <p className="flex-1 text-sm text-right text-white">A Url Shortening Service</p>
+        <p className="flex-1 text-sm text-left">A Url Shortening Service</p>
         {user && (
           <button
-            className="ml-5 shadow-md p-2 self-center bg-green-400 hover:bg-green-600 cursor-pointer"
+            className="ml-5 shadow-md p-2 self-center bg-yellow-400 hover:bg-yellow-600 cursor-pointer"
             onClick={() => LogoutUser()}
           >
             Logout

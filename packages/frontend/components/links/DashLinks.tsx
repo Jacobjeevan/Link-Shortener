@@ -24,7 +24,7 @@ export default function DashLinks(): JSX.Element {
         <div className="mt-5 mb-2 ml-2 mr-2 space-y-4 py-3">
           {links.map((UrlEntry) => (
             <div className="flex shadow-md" key={UrlEntry._id}>
-              <div className="flex items-stretch bg-green-300 p-3 rounded-sm border-l-4 border-green-500 flex-1">
+              <div className="flex items-stretch bg-yellow-300 p-3 rounded-sm border-l-4 border-yellow-500 flex-1">
                 <div className="flex-initial mr-5">
                   <p>{UrlEntry.shortUrl}</p>
                 </div>
@@ -33,7 +33,7 @@ export default function DashLinks(): JSX.Element {
               <div className="flex-initial flex-nowrap">
                 <button
                   onClick={() => router.push(UrlEntry.shortUrl)}
-                  className="flex-1 bg-green-400 h-full p-2 hover:bg-green-600"
+                  className="flex-1 bg-yellow-500 h-full p-2 hover:bg-yellow-600"
                 >
                   Open
                 </button>
