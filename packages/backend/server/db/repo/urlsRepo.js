@@ -3,7 +3,7 @@ const Str = require("@supercharge/strings"),
 
 async function getUrl(shortUrl) {
   try {
-    const UrlEntry = await Url.findOne({ shortUrl });
+    const UrlEntry = await Url.findOne({ shortUrl: shortUrl.toLowerCase() });
     return UrlEntry ? UrlEntry.longUrl : null;
   } catch (error) {
     console.log(error);
@@ -42,7 +42,7 @@ async function createCustomShortUrl(longUrl, shortUrl, userId) {
     }
     await Url.create({
       longUrl,
-      shortUrl,
+      shortUrl: shortUrl.toLowerCase(),
       userId,
     });
     return true;
@@ -56,7 +56,7 @@ async function shortenUrl(longUrl, userId) {
     const shortUrl = Str.random(5);
     await Url.create({
       longUrl,
-      shortUrl,
+      shortUrl: shortUrl.toLowerCase(),
       userId,
     });
     return shortUrl;

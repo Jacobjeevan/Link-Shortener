@@ -91,7 +91,7 @@ describe("URLs", () => {
           res.should.have.status(200);
           res.body.should.have.property("shortUrl");
           Url.findOne({ longUrl: urlReq.url }).then((urlEntry) => {
-            res.body.shortUrl.should.equal(urlEntry.shortUrl);
+            res.body.shortUrl.toLowerCase().should.equal(urlEntry.shortUrl);
             done();
           });
         });
@@ -105,16 +105,16 @@ describe("URLs", () => {
         .end(async (err, res) => {
           res.should.have.status(200);
           res.body.should.have.property("shortUrl");
-          shortUrl = res.body.shortUrl;
+          shortUrl = res.body.shortUrl.toLowerCase();
           Url.findOne({ longUrl: urlReq.url }).then((urlEntry) => {
-            res.body.shortUrl.should.equal(urlEntry.shortUrl);
+            res.body.shortUrl.toLowerCase().should.equal(urlEntry.shortUrl);
             agent
               .post("/shorten")
               .send(urlReq)
               .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.have.property("shortUrl");
-                res.body.shortUrl.should.equal(shortUrl);
+                res.body.shortUrl.toLowerCase().should.equal(shortUrl);
                 done();
               });
           });
@@ -131,7 +131,7 @@ describe("URLs", () => {
           res.body.should.have.property("shortUrl");
           shortUrl = res.body.shortUrl;
           Url.findOne({ longUrl: urlReq.url }).then((urlEntry) => {
-            res.body.shortUrl.should.equal(urlEntry.shortUrl);
+            res.body.shortUrl.toLowerCase().should.equal(urlEntry.shortUrl);
             agent.get(`/${shortUrl}`).end((err, res) => {
               res.should.have.status(200);
               res.body.should.have.property("success");
