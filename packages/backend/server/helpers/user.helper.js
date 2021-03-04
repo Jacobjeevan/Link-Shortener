@@ -4,6 +4,7 @@ const { handleError } = require("./errors");
 const SibApiV3Sdk = require("sib-api-v3-sdk");
 const fs = require("fs");
 const path = require("path");
+const logger = require("./logger");
 
 const template = fs.readFileSync(
   path.resolve(__dirname, "../../assets/emailTemplate.html"),
@@ -48,7 +49,25 @@ const getUser = (user) => {
   };
 };
 
-const sendMail = async (to, subject, message) => {};
+const sendMail = async (to, subject, message) => {
+  try {
+    const siteadmin = {
+      name: "Jacob from JeevanLink",
+      email: process.env.Email,
+    };
+    let apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+    let sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
+    sendSmtpEmail.sender = siteadmin;
+    sendSmtpEmail.to = [{ email: to }];
+    sendSmtpEmail.htmlContent = message;
+    sendSmtpEmail.subject = subject;
+    sendSmtpEmail.replyTo = siteadmin;
+    const response = await apiInstance.sendTransacEmail(sendSmtpEmail);
+    return { ...response, success: true };
+  } catch (e) {
+    logger.error(e);
+  }
+};
 
 const sendRegistrationEmail = async (to) => {
   await sendMail(to, "", "");
