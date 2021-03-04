@@ -1,6 +1,22 @@
 const bcrypt = require("bcrypt");
 const { getUserById } = require("../db/repo/userRepo");
 const { handleError } = require("./errors");
+const SibApiV3Sdk = require("sib-api-v3-sdk");
+const fs = require("fs");
+const path = require("path");
+
+const template = fs.readFileSync(
+  path.resolve(__dirname, "../../assets/emailTemplate.html"),
+  {
+    encoding: "utf-8",
+  }
+);
+
+var defaultClient = SibApiV3Sdk.ApiClient.instance;
+
+// Configure API key authorization: api-key
+var apiKey = defaultClient.authentications["api-key"];
+apiKey.apiKey = process.env.SendinBlue_API;
 
 async function hashPassword(password) {
   const salt = await bcrypt.genSalt(10);
@@ -32,4 +48,31 @@ const getUser = (user) => {
   };
 };
 
-module.exports = { hashPassword, checkIfLoggedIn, getUser };
+const sendMail = async (to, subject, message) => {};
+
+const sendRegistrationEmail = async (to) => {
+  await sendMail(to, "", "");
+};
+
+const sendResetPasswordEmail = async (to, hash) => {
+  const body = template
+    .replace("%titlePlaceHolder%", "Password reset request")
+    .replace(
+      "%bodyPlaceHolder%",
+      `We received a request to reset your password. You can do so by clicking the link below. Please ignore this message if you didn't request the reset.`
+    )
+    .replace("%buttonPlaceHolder%", "Reset Password")
+    .replace(
+      "%linkplaceholder%",
+      `${process.env.BACKEND_URL}/password/reset/${hash}`
+    );
+
+  return sendMail(to, "Jeevan Link - Password Reset", body);
+};
+
+module.exports = {
+  hashPassword,
+  checkIfLoggedIn,
+  getUser,
+  sendResetPasswordEmail,
+};
