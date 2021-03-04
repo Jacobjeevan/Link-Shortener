@@ -14,6 +14,10 @@ const {
 } = require("../helpers/user.helper");
 const logger = require("../helpers/logger");
 
+router.post("/password/reset", async (req, res) => {});
+
+router.post("/password/reset/:token", async (req, res) => {});
+
 router.post("/register", signupValidation(), validate, async (req, res) => {
   const { email, password } = req.body;
   try {
