@@ -11,10 +11,24 @@ const {
   hashPassword,
   checkIfLoggedIn,
   getUser,
+  sendResetPasswordEmail,
 } = require("../helpers/user.helper");
 const logger = require("../helpers/logger");
 
-router.post("/password/reset", async (req, res) => {});
+router.post("/password/reset", async (req, res) => {
+  const { email } = req.body;
+  try {
+    const foundUser = await getUserByEmail(email);
+    if (!foundUser) return handleError(res, 400, "User not found");
+    const response = await sendResetPasswordEmail(email, "123456");
+    const { success } = response;
+    if (success) {
+      res.status(200).json(response);
+    } else handleError(res, 400, "Could not send reset email");
+  } catch (error) {
+    handleError(res, 400, "Could not request password reset");
+  }
+});
 
 router.post("/password/reset/:token", async (req, res) => {});
 
