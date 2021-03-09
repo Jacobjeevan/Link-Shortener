@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const { getUserById } = require("../db/repo/userRepo");
+const { getUserById, getUserByEmail } = require("../db/repo/userRepo");
 const { handleError } = require("./errors");
 const SibApiV3Sdk = require("sib-api-v3-sdk");
 const fs = require("fs");
@@ -37,8 +37,23 @@ const checkIfLoggedIn = async (req, res, next) => {
       return handleError(res, 404, "UserId not found");
     }
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     return handleError(res, 404, "User not found");
+  }
+};
+
+const checkIfUserExists = async (req, res, next) => {
+  const { email } = req.body;
+  try {
+    const foundUser = await getUserByEmail(email);
+    if (!foundUser) throw new Error("User not found");
+    else {
+      req.body.user = foundUser;
+      next();
+    }
+  } catch (error) {
+    logger.error(error);
+    return handleError(res, 404, error);
   }
 };
 
@@ -50,23 +65,26 @@ const getUser = (user) => {
 };
 
 const sendMail = async (to, subject, message) => {
-  try {
-    const siteadmin = {
-      name: "Jacob from JeevanLink",
-      email: process.env.Email,
-    };
-    let apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
-    let sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
-    sendSmtpEmail.sender = siteadmin;
-    sendSmtpEmail.to = [{ email: to }];
-    sendSmtpEmail.htmlContent = message;
-    sendSmtpEmail.subject = subject;
-    sendSmtpEmail.replyTo = siteadmin;
-    const response = await apiInstance.sendTransacEmail(sendSmtpEmail);
-    return { ...response, success: true };
-  } catch (e) {
-    logger.error(e);
+  if (process.env.NODE_ENV !== "test") {
+    try {
+      const siteadmin = {
+        name: "Jacob from JeevanLink",
+        email: process.env.Email,
+      };
+      let apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+      let sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
+      sendSmtpEmail.sender = siteadmin;
+      sendSmtpEmail.to = [{ email: to }];
+      sendSmtpEmail.htmlContent = message;
+      sendSmtpEmail.subject = subject;
+      sendSmtpEmail.replyTo = siteadmin;
+      const response = await apiInstance.sendTransacEmail(sendSmtpEmail);
+      return { ...response, success: true };
+    } catch (e) {
+      logger.error(e);
+    }
   }
+  return { success: true };
 };
 
 const sendRegistrationEmail = async (to) => {
@@ -94,4 +112,5 @@ module.exports = {
   checkIfLoggedIn,
   getUser,
   sendResetPasswordEmail,
+  checkIfUserExists,
 };
