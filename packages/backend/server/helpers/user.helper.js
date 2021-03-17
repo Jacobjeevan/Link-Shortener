@@ -53,7 +53,7 @@ const checkIfUserExists = async (req, res, next) => {
     }
   } catch (error) {
     logger.error(error);
-    return handleError(res, 404, error);
+    return handleError(res, 404, "User not found");
   }
 };
 
@@ -65,7 +65,7 @@ const getUser = (user) => {
 };
 
 const sendMail = async (to, subject, message) => {
-  if (process.env.NODE_ENV !== "test") {
+  if (process.env.NODE_ENV === "production") {
     try {
       const siteadmin = {
         name: "Jacob from JeevanLink",
@@ -92,6 +92,7 @@ const sendRegistrationEmail = async (to) => {
 };
 
 const sendResetPasswordEmail = async (to, hash) => {
+  const url = `${process.env.FRONTEND_URL}/password/reset/${hash}`;
   const body = template
     .replace("%titlePlaceHolder%", "Password reset request")
     .replace(
@@ -99,11 +100,10 @@ const sendResetPasswordEmail = async (to, hash) => {
       `We received a request to reset your password. You can do so by clicking the link below. Please ignore this message if you didn't request the reset.`
     )
     .replace("%buttonPlaceHolder%", "Reset Password")
-    .replace(
-      "%linkplaceholder%",
-      `${process.env.BACKEND_URL}/password/reset/${hash}`
-    );
-
+    .replace("%linkPlaceHolder%", url);
+  if (process.env.NODE_ENV !== "production") {
+    logger.info("Reset password link", { url });
+  }
   return sendMail(to, "Jeevan Link - Password Reset", body);
 };
 

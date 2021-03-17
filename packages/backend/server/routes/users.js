@@ -59,7 +59,7 @@ router.get(
       await checkIfValidToken(token);
       res.status(200).json({ success: true });
     } catch (error) {
-      console.log(error);
+      logger.info(error);
       handleError(res, 400, error);
     }
   }
@@ -76,6 +76,7 @@ router.post(
       await checkIfValidToken(token);
       const hashedPass = await hashPassword(password);
       await updatePassword(token, hashedPass);
+      await updateResetParams(user._id, { token: "", tokenExpiration: "" });
       res.status(200).json({ success: true });
     } catch (error) {
       handleError(res, 400, error);

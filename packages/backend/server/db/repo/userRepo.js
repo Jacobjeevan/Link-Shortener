@@ -1,6 +1,5 @@
 const User = require("../models/user");
 const dayjs = require("dayjs");
-const logger = require("../../helpers/logger");
 
 async function getUserByEmail(email) {
   try {
@@ -60,7 +59,6 @@ async function checkIfValidToken(token) {
     const user = await checkIfTokenExists(token);
     return checkIfTokenExpired(user.tokenExpiration);
   } catch (error) {
-    logger.error(error);
     throw new Error(`Token Not Valid: ${error}`);
   }
 }
@@ -74,7 +72,6 @@ async function updatePassword(token, password) {
       }
     ).exec();
   } catch (error) {
-    logger.error(error);
     throw new Error(`Could not update Password: ${error}`);
   }
 }
