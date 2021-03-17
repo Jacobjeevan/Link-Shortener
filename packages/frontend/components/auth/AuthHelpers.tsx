@@ -49,3 +49,5 @@ export const inputClass = "shadow-md p-2 rounded-sm focus:ring-2 focus:ring-blac
 export const errorClass = "text-sm text-white";
 export const submitBtnClass =
   "shadow p-4 font-bold self-center bg-yellow-400 hover:bg-yellow-500 cursor-pointer uppercase";
+
+export const linkToResetClass = "hover:underline cursor-pointer";
