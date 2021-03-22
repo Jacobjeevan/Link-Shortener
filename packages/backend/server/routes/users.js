@@ -59,7 +59,6 @@ router.get(
       await checkIfValidToken(token);
       res.status(200).json({ success: true });
     } catch (error) {
-      logger.info(error);
       handleError(res, 400, error);
     }
   }
@@ -73,7 +72,7 @@ router.post(
     const { token } = req.params;
     const { password } = req.body;
     try {
-      await checkIfValidToken(token);
+      const { user } = await checkIfValidToken(token);
       const hashedPass = await hashPassword(password);
       await updatePassword(token, hashedPass);
       await updateResetParams(user._id, { token: "", tokenExpiration: "" });

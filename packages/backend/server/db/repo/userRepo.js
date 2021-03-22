@@ -38,7 +38,7 @@ async function updateResetParams(id, params) {
   }
 }
 
-async function checkIfTokenExists(token) {
+async function findUserbyToken(token) {
   try {
     return User.findOne({ token }).exec();
   } catch (error) {
@@ -56,8 +56,9 @@ function checkIfTokenExpired(expirationTime) {
 
 async function checkIfValidToken(token) {
   try {
-    const user = await checkIfTokenExists(token);
-    return checkIfTokenExpired(user.tokenExpiration);
+    const user = await findUserbyToken(token);
+    const valid = checkIfTokenExpired(user.tokenExpiration);
+    return { user, valid };
   } catch (error) {
     throw new Error(`Token Not Valid: ${error}`);
   }
