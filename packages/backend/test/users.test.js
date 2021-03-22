@@ -252,6 +252,22 @@ describe("Users", () => {
           });
       });
     });
+
+    it("Should return error is token is expired", (done) => {
+      User.create({
+        email: userReq.email,
+        password: hashedPass,
+        token,
+        tokenExpiration: dayjs().subtract(2, "hour"),
+      }).then(() => {
+        agent.get(`/password/reset/${token}`).end((err, getResetRes) => {
+          getResetRes.should.have.status(400);
+          getResetRes.body.should.have.property("success");
+          getResetRes.body.success.should.equal(false);
+          done();
+        });
+      });
+    });
   });
 
   afterEach((done) => {
