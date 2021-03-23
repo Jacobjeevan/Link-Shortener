@@ -6,12 +6,14 @@ import {
   formClass,
   formHeaderClass,
   inputClass,
+  linkToResetClass,
   loginResolver,
   submitBtnClass,
   submitForm,
 } from "./AuthHelpers";
 import { login } from "./AuthApi";
 import { IAuth } from "./types/auth";
+import Link from "next/link";
 
 export default function Login(): JSX.Element {
   const { setUser } = useAppContext();
@@ -37,6 +39,14 @@ export default function Login(): JSX.Element {
 
         <input name="password" ref={register} placeholder="Password" type="password" className={inputClass} />
         <p className={errorClass}>{errors.password?.message}</p>
+
+        <p>
+          Forgot your password? Click{" "}
+          <Link href="/password/reset">
+            <span className={linkToResetClass}>here</span>
+          </Link>{" "}
+          to request a reset.
+        </p>
 
         <input type="submit" className={submitBtnClass} value="Login" />
       </form>

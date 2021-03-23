@@ -1,5 +1,7 @@
+const { assert } = require("chai");
 const chai = require("chai");
 const chaiHttp = require("chai-http");
+const dayjs = require("dayjs");
 const server = require("../server/app");
 const should = chai.should();
 chai.use(chaiHttp);
@@ -14,6 +16,7 @@ const userReq = {
 };
 
 let hashedPass;
+let token;
 
 describe("Users", () => {
   before(async () => {
@@ -184,6 +187,86 @@ describe("Users", () => {
             done();
           });
         });
+    });
+  });
+
+  describe("Password Reset routes", () => {
+    it("Should successfully request password reset", (done) => {
+      User.create({
+        email: userReq.email,
+        password: hashedPass,
+      }).then(() => {
+        agent
+          .post("/password/reset")
+          .send({ email: userReq.email })
+          .end((err, reqResetRes) => {
+            reqResetRes.should.have.status(200);
+            reqResetRes.body.should.have.property("success");
+            reqResetRes.body.success.should.equal(true);
+            reqResetRes.body.should.have.property("token");
+            token = reqResetRes.body.token;
+            agent.get(`/password/reset/${token}`).end((err, getResetRes) => {
+              getResetRes.should.have.status(200);
+              getResetRes.body.should.have.property("success");
+              getResetRes.body.success.should.equal(true);
+              done();
+            });
+          });
+      });
+    });
+
+    it("Should successfully change password", (done) => {
+      User.create({
+        email: userReq.email,
+        password: hashedPass,
+        token,
+        tokenExpiration: dayjs().add(2, "hour"),
+      }).then(() => {
+        agent
+          .post(`/password/reset/${token}`)
+          .send({
+            password: "d00mTest13",
+          })
+          .end((err, postResetRes) => {
+            postResetRes.should.have.status(200);
+            postResetRes.body.should.have.property("success");
+            postResetRes.body.success.should.equal(true);
+
+            agent
+              .post("/login")
+              .send({ email: userReq.email, password: "d00mTest13" })
+              .end((err, res) => {
+                res.should.have.status(200);
+                res.body.should.have.property("user");
+                res.body.user.should.have.property("email");
+                res.body.user.should.have.property("id");
+                res.body.user.email.should.equal(userReq.email);
+
+                agent.get("/logout").end((err, res) => {
+                  res.should.have.status(200);
+                  res.body.should.property("success");
+                  res.body.success.should.equal(true);
+                  done();
+                });
+              });
+          });
+      });
+    });
+
+    it("Should return error is token is expired", (done) => {
+      User.create({
+        email: userReq.email,
+        password: hashedPass,
+        token,
+        tokenExpiration: dayjs().subtract(2, "hour"),
+      }).then(() => {
+        agent.get(`/password/reset/${token}`).end((err, getResetRes) => {
+          getResetRes.should.have.status(400);
+          getResetRes.body.should.have.property("success");
+          getResetRes.body.success.should.equal(false);
+          done();
+        });
+      });
     });
   });
 

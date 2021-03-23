@@ -1,18 +1,87 @@
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
-const { getUserByEmail, createNewUser } = require("../db/repo/userRepo");
+const {
+  getUserByEmail,
+  createNewUser,
+  updateResetParams,
+  checkIfValidToken,
+  updatePassword,
+} = require("../db/repo/userRepo");
 const { handleError } = require("../helpers/errors");
 const {
   signupValidation,
   loginValidation,
   validate,
+  requestPasswordResetValidation,
+  getResetTokenValidation,
+  postResetTokenValidation,
 } = require("./validations/user.validations");
 const {
   hashPassword,
   checkIfLoggedIn,
   getUser,
+  sendResetPasswordEmail,
+  checkIfUserExists,
 } = require("../helpers/user.helper");
 const logger = require("../helpers/logger");
+const Str = require("@supercharge/strings");
+const dayjs = require("dayjs");
+
+router.post(
+  "/password/reset",
+  requestPasswordResetValidation(),
+  validate,
+  checkIfUserExists,
+  async (req, res) => {
+    const { email, user } = req.body;
+    try {
+      const token = Str.random(10);
+      const tokenExpiration = dayjs().add(2, "hour");
+      await updateResetParams(user._id, { token, tokenExpiration });
+      const response = await sendResetPasswordEmail(email, token);
+      const { success } = response;
+      if (success) {
+        res.status(200).json({ ...response, token });
+      } else handleError(res, 400, "Could not send reset email");
+    } catch (error) {
+      handleError(res, 400, `Could not request password reset - ${error}`);
+    }
+  }
+);
+
+router.get(
+  "/password/reset/:token",
+  getResetTokenValidation(),
+  validate,
+  async (req, res) => {
+    const { token } = req.params;
+    try {
+      await checkIfValidToken(token);
+      res.status(200).json({ success: true });
+    } catch (error) {
+      handleError(res, 400, error);
+    }
+  }
+);
+
+router.post(
+  "/password/reset/:token",
+  postResetTokenValidation(),
+  validate,
+  async (req, res) => {
+    const { token } = req.params;
+    const { password } = req.body;
+    try {
+      const { user } = await checkIfValidToken(token);
+      const hashedPass = await hashPassword(password);
+      await updatePassword(token, hashedPass);
+      await updateResetParams(user._id, { token: "", tokenExpiration: "" });
+      res.status(200).json({ success: true });
+    } catch (error) {
+      handleError(res, 400, error);
+    }
+  }
+);
 
 router.post("/register", signupValidation(), validate, async (req, res) => {
   const { email, password } = req.body;

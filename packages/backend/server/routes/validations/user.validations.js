@@ -1,4 +1,4 @@
-const { body, validationResult } = require("express-validator");
+const { body, validationResult, param } = require("express-validator");
 const { handleError } = require("../../helpers/errors");
 
 const signupValidation = () => {
@@ -41,6 +41,21 @@ const loginValidation = () => {
   ];
 };
 
+const requestPasswordResetValidation = () => {
+  return [body("email", "Email is required")];
+};
+
+const getResetTokenValidation = () => {
+  return [param("token", "Token is required").notEmpty()];
+};
+
+const postResetTokenValidation = () => {
+  return [
+    param("token", "Token is required").notEmpty(),
+    body("password", "Password is required").notEmpty(),
+  ];
+};
+
 const validate = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -49,4 +64,11 @@ const validate = (req, res, next) => {
   next();
 };
 
-module.exports = { signupValidation, loginValidation, validate };
+module.exports = {
+  signupValidation,
+  loginValidation,
+  requestPasswordResetValidation,
+  getResetTokenValidation,
+  postResetTokenValidation,
+  validate,
+};

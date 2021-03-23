@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const dayjs = require("dayjs");
 
 async function getUserByEmail(email) {
   try {
@@ -25,8 +26,62 @@ async function getUserById(userId) {
   }
 }
 
+async function updateResetParams(id, params) {
+  try {
+    const { token, tokenExpiration } = params;
+    return User.updateOne(
+      { _id: id },
+      { $set: { token, tokenExpiration } }
+    ).exec();
+  } catch (error) {
+    throw new Error(`Failed to update User: ${error}`);
+  }
+}
+
+async function findUserbyToken(token) {
+  try {
+    return User.findOne({ token }).exec();
+  } catch (error) {
+    throw new Error(`Token not Found: ${error}`);
+  }
+}
+
+function checkIfTokenExpired(expirationTime) {
+  const valid = dayjs().isBefore(expirationTime);
+  if (valid) return true;
+  else {
+    throw new Error(`Token Expired. Try Again`);
+  }
+}
+
+async function checkIfValidToken(token) {
+  try {
+    const user = await findUserbyToken(token);
+    const valid = checkIfTokenExpired(user.tokenExpiration);
+    return { user, valid };
+  } catch (error) {
+    throw new Error(`Token Not Valid: ${error}`);
+  }
+}
+
+async function updatePassword(token, password) {
+  try {
+    return User.findOneAndUpdate(
+      { token },
+      {
+        $set: { password },
+      }
+    ).exec();
+  } catch (error) {
+    throw new Error(`Could not update Password: ${error}`);
+  }
+}
+
 module.exports = {
   getUserByEmail,
   createNewUser,
   getUserById,
+  updateResetParams,
+  checkIfValidToken,
+  updatePassword,
 };

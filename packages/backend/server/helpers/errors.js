@@ -7,7 +7,11 @@ const handleError = (res, code, errorMsg) => {
   if (typeof errorMsg === "object") {
     statusCode = errorMsg.statusCode;
     const { param, msg } = errorMsg;
-    error = `${msg} - ${param}`;
+    if (param && msg) {
+      error = `${msg} - ${param}`;
+    } else {
+      error = errorMsg;
+    }
   } else if (typeof errorMsg === "string") {
     error = errorMsg;
   }
