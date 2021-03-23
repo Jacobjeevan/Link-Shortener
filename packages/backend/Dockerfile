@@ -16,7 +16,7 @@ COPY . .
 
 EXPOSE 5000
 
-RUN mkdir config
+RUN mkdir -p config
 RUN echo "Redis_session_name=${Redis_session_name}" >> config/.env.prod
 RUN echo "Redis_session_secret=${Redis_session_secret}" >> config/.env.prod
 RUN echo "Redis_session_age=${Redis_session_age}" >> config/.env.prod
