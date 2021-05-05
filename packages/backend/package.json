@@ -14,7 +14,7 @@
 	"dependencies": {
 		"@supercharge/strings": "^1.16.0",
 		"backend": "^0.0.0",
-		"bcrypt": "^5.0.0",
+		"bcrypt": "^5.0.1",
 		"connect-mongodb-session": "^2.4.1",
 		"connect-redis": "^5.0.0",
 		"cors": "^2.8.5",
