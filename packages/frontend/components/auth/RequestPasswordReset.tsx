@@ -5,7 +5,11 @@ import { requestPasswordReset } from "./AuthApi";
 import { toast } from "react-toastify";
 
 export default function RequestPasswordReset(): JSX.Element {
-  const { register, handleSubmit, errors } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     resolver: requestResetResolver,
   });
 
@@ -23,7 +27,7 @@ export default function RequestPasswordReset(): JSX.Element {
   return (
     <Fragment>
       <form onSubmit={handleSubmit(onSubmit)} className={formClass}>
-        <input name="email" ref={register} placeholder="Email/Username" className={inputClass} />
+        <input {...register("email")} placeholder="Email/Username" className={inputClass} />
         <p className={errorClass}>{errors.email?.message}</p>
 
         <input type="submit" className={submitBtnClass} value="Request Reset" />

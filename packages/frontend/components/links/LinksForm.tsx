@@ -6,7 +6,12 @@ import { mutate } from "swr";
 import { IShortenAPI } from "./types/shorten";
 
 export default function LinksForm(): JSX.Element {
-  const { register, handleSubmit, errors, reset } = useForm({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
     resolver: formResolver,
   });
 
@@ -26,10 +31,10 @@ export default function LinksForm(): JSX.Element {
         <h3 className="text-md">Create a new short url</h3>
       </div>
 
-      <input name="url" ref={register} placeholder="Destination Url" className={inputClass} />
+      <input {...register("url")} placeholder="Destination Url" className={inputClass} />
       <p className="text-sm text-gray-400">{errors.url?.message}</p>
 
-      <input name="customURL" ref={register} placeholder="Custom identifier" className={inputClass} />
+      <input {...register("customURL")} placeholder="Custom identifier" className={inputClass} />
       <p className="text-sm text-gray-400">{errors.customURL?.message}</p>
 
       <input

@@ -5,7 +5,11 @@ import { checkTokenValidity, changePassword } from "./AuthApi";
 import { toast } from "react-toastify";
 
 export default function ResetPassword(Props: { token: string }): JSX.Element {
-  const { register, handleSubmit, errors } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     resolver: resetPasswordResolver,
   });
   const [tokenInvalid, setTokenInvalid] = useState(false);
@@ -47,12 +51,11 @@ export default function ResetPassword(Props: { token: string }): JSX.Element {
   return (
     <Fragment>
       <form onSubmit={handleSubmit(onSubmit)} className={formClass}>
-        <input name="password" ref={register} placeholder="New Password" className={inputClass} type="password" />
+        <input {...register("password")} placeholder="New Password" className={inputClass} type="password" />
         <p className={errorClass}>{errors.password?.message}</p>
 
         <input
-          name="passwordConfirm"
-          ref={register}
+          {...register("passwordConfirm")}
           placeholder="Confirm New Password"
           className={inputClass}
           type="password"

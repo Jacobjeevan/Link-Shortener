@@ -15,7 +15,12 @@ import { IAuth } from "./types/auth";
 
 export default function Register(): JSX.Element {
   const { setUser } = useAppContext();
-  const { register, handleSubmit, errors } = useForm({
+  const {
+    register,
+    handleSubmit,
+
+    formState: { errors },
+  } = useForm({
     resolver: registerResolver,
   });
 
@@ -32,19 +37,13 @@ export default function Register(): JSX.Element {
         <div className={formHeaderClass}>
           <h3 className="text-md">Register to shorten urls</h3>
         </div>
-        <input name="email" ref={register} placeholder="Email/Username" className={inputClass} />
+        <input {...register("email")} placeholder="Email/Username" className={inputClass} />
         <p className={errorClass}>{errors.email?.message}</p>
 
-        <input name="password" ref={register} placeholder="Password" type="password" className={inputClass} />
+        <input {...register("password")} placeholder="Password" type="password" className={inputClass} />
         <p className={errorClass}>{errors.password?.message}</p>
 
-        <input
-          name="passwordConfirm"
-          ref={register}
-          placeholder="Confirm Password"
-          type="password"
-          className={inputClass}
-        />
+        <input {...register("passwordConfirm")} placeholder="Confirm Password" type="password" className={inputClass} />
         <p className={errorClass}>{errors.passwordConfirm?.message}</p>
 
         <input type="submit" className={submitBtnClass} value="Register" />
