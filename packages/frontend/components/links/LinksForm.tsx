@@ -27,7 +27,7 @@ export default function LinksForm(): JSX.Element {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col space-y-2 items-center">
-      <div className="p-3 mb-3 rounded-sm shadow-md bg-yellow-300">
+      <div className="p-3 mb-3 rounded-sm shadow-md bg-gray-300">
         <h3 className="text-md">Create a new short url</h3>
       </div>
 
@@ -39,7 +39,7 @@ export default function LinksForm(): JSX.Element {
 
       <input
         type="submit"
-        className="shadow-md p-2 self-center bg-yellow-400 hover:bg-yellow-600 cursor-pointer"
+        className="shadow-md p-2 self-center bg-gray-200 hover:bg-gray-300 cursor-pointer"
         value="Shorten Url"
       />
     </form>

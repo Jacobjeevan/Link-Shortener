@@ -44,10 +44,9 @@ export async function submitForm(callAPI: AuthFn, data: IAuth): Promise<IUser | 
 }
 
 export const formClass = "flex flex-col space-y-3 items-center";
-export const formHeaderClass = "p-4 text-2xl mb-3 bg-yellow-400";
+export const formHeaderClass = "p-4 text-2xl mb-3 bg-gray-200";
 export const inputClass = "shadow-md p-2 rounded-sm focus:ring-2 focus:ring-black";
 export const errorClass = "text-sm text-white";
-export const submitBtnClass =
-  "shadow p-4 font-bold self-center bg-yellow-400 hover:bg-yellow-500 cursor-pointer uppercase";
+export const submitBtnClass = "shadow p-4 font-bold self-center bg-gray-100 hover:bg-gray-300 cursor-pointer uppercase";
 
 export const linkToResetClass = "hover:underline cursor-pointer";

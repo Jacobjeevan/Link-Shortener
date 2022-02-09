@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 
-const cardContainerClass = "flex-auto inline-flex flex-wrap p-6 bg-yellow-400 shadow group hover:shadow-md text-black";
+const cardContainerClass = "flex-auto inline-flex flex-wrap p-6 bg-gray-50 shadow group hover:shadow-md text-black";
 
 const cardClass = "flex flex-col space-y-2 group-hover:text-gray-600";
 
