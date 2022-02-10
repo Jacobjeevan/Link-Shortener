@@ -1,6 +1,5 @@
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { toast } from "react-toastify";
 
 const registerFormSchema = yup.object().shape({
   email: yup.string().required().email(),
