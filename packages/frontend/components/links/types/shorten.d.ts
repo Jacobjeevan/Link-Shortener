@@ -1,6 +1,6 @@
 export interface IShortenAPI {
-  longUrl: string;
-  shortUrl?: string;
+  url: string;
+  customURL?: string;
 }
 
 export interface IShortenResponse {
