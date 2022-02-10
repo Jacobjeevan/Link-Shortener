@@ -1,9 +1,10 @@
 import React from "react";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { shorten } from "./LinksApi";
-import { formResolver, submitLink } from "./LinkHelpers";
+import { formResolver } from "./LinkHelpers";
 import { mutate } from "swr";
-import { IShortenAPI } from "./types/shorten";
+import { IShortenAPI, IShortenResponse } from "./types/shorten";
+import { toast } from "react-toastify";
 
 export default function LinksForm(): JSX.Element {
   const {
@@ -11,16 +12,21 @@ export default function LinksForm(): JSX.Element {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({
+  } = useForm<IShortenAPI>({
     resolver: formResolver,
   });
 
-  const onSubmit = async (data: IShortenAPI) => {
-    const link = await submitLink(shorten, data);
-    if (link) {
-      mutate("links");
-    }
-    reset();
+  const onSubmit: SubmitHandler<IShortenAPI> = async (data) => {
+    shorten(data)
+      .then(({ success, error }: IShortenResponse) => {
+        if (success) {
+          mutate("links");
+        } else {
+          toast.error(error);
+        }
+        reset();
+      })
+      .catch((response: IShortenResponse) => toast.error(response.error));
   };
 
   const inputClass = "shadow-md p-2 rounded-sm focus:ring-2 focus:ring-black";
