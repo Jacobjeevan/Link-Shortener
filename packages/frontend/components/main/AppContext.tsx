@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
+import { toast } from "react-toastify";
 import { getUser } from "../auth/AuthApi";
 import { IAuthResponse, IUser } from "../auth/types/auth";
 import { IAppProps, IAppContext, setStateUser } from "./main";
@@ -13,14 +14,17 @@ export function StateWrapper(props: IAppProps): JSX.Element {
   };
 
   useEffect(() => {
-    async function fetchUser() {
-      if (!user) {
-        const APIresponse: IAuthResponse = await getUser();
-        const { success, user } = APIresponse;
-        if (success) setUser(user);
-      }
+    if (!user) {
+      getUser()
+        .then(({ success, user, error }: IAuthResponse) => {
+          if (success) {
+            setUser(user);
+          } else {
+            toast.error(error);
+          }
+        })
+        .catch((response: IAuthResponse) => toast.error(response.error));
     }
-    fetchUser();
   }, [user]);
 
   return <AppContext.Provider value={{ user, setUser }}>{props.children}</AppContext.Provider>;
