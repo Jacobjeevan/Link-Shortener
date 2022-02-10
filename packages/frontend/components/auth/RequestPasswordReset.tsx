@@ -1,27 +1,29 @@
 import React, { Fragment } from "react";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { errorClass, formClass, inputClass, requestResetResolver, submitBtnClass } from "./AuthHelpers";
 import { requestPasswordReset } from "./AuthApi";
 import { toast } from "react-toastify";
+import { IRequestResetResponse } from "./types/auth";
 
 export default function RequestPasswordReset(): JSX.Element {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<{ email: string }>({
     resolver: requestResetResolver,
   });
 
-  const onSubmit = async (data: { email: string }) => {
-    const { email } = data;
-    const response = await requestPasswordReset(email);
-    const { success, error } = response;
-    if (success) {
-      toast.success("A reset link has been sent to your email.");
-    } else if (error) {
-      toast.error(error);
-    }
+  const onSubmit: SubmitHandler<{ email: string }> = async ({ email }) => {
+    requestPasswordReset(email)
+      .then(({ success, error }: IRequestResetResponse) => {
+        if (success) {
+          toast.success("A reset link has been sent to your email.");
+        } else {
+          toast.error(error);
+        }
+      })
+      .catch((response: IRequestResetResponse) => toast.error(response.error));
   };
 
   return (

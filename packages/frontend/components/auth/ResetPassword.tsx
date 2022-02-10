@@ -1,15 +1,16 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { errorClass, formClass, inputClass, resetPasswordResolver, submitBtnClass } from "./AuthHelpers";
 import { checkTokenValidity, changePassword } from "./AuthApi";
 import { toast } from "react-toastify";
+import { IResetReponse } from "./types/auth";
 
 export default function ResetPassword(Props: { token: string }): JSX.Element {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<{ password: string; passwordConfirm: string }>({
     resolver: resetPasswordResolver,
   });
   const [tokenInvalid, setTokenInvalid] = useState(false);
@@ -17,27 +18,25 @@ export default function ResetPassword(Props: { token: string }): JSX.Element {
   const { token } = Props;
 
   useEffect(() => {
-    async function tokenValidity() {
-      if (token) {
-        const response = await checkTokenValidity(token);
-        const { error } = response;
-        if (error) {
+    if (token) {
+      checkTokenValidity(token).catch((response: IResetReponse) => {
+        if (response.error) {
           setTokenInvalid(true);
         }
-      }
+      });
     }
-    tokenValidity();
   }, [token]);
 
-  const onSubmit = async (data: { password: string }) => {
-    const { password } = data;
-    const response = await changePassword(token, password);
-    const { success, error } = response;
-    if (success) {
-      toast.success("Password updated. You may now login with new password.");
-    } else if (error) {
-      toast.error(error);
-    }
+  const onSubmit: SubmitHandler<{ password: string }> = async ({ password }) => {
+    changePassword(token, password)
+      .then(({ success, error }: IResetReponse) => {
+        if (success) {
+          toast.success("Password updated. You may now login with new password.");
+        } else {
+          toast.error(error);
+        }
+      })
+      .catch((response: IResetReponse) => toast.error(response.error));
   };
 
   if (tokenInvalid) {
