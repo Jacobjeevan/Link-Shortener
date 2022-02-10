@@ -3,7 +3,7 @@ import { useAppContext } from "../main/AppContext";
 import { useForm } from "react-hook-form";
 import { errorClass, formClass, formHeaderClass, inputClass, registerResolver, submitBtnClass } from "./AuthHelpers";
 import { register as registerUser } from "./AuthApi";
-import { IAuth } from "./types/auth";
+import { IAuth, IAuthResponse } from "./types/auth";
 import { toast } from "react-toastify";
 
 export default function Register(): JSX.Element {
@@ -18,8 +18,14 @@ export default function Register(): JSX.Element {
 
   const onSubmit = async (data: IAuth) => {
     registerUser(data)
-      .then((user) => setUser(user))
-      .catch((error) => toast.error(error));
+      .then(({ success, user, error }: IAuthResponse) => {
+        if (success) {
+          setUser(user);
+        } else {
+          toast.error(error);
+        }
+      })
+      .catch((response: IAuthResponse) => toast.error(response.error));
   };
 
   return (

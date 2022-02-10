@@ -11,7 +11,7 @@ import {
   submitBtnClass,
 } from "./AuthHelpers";
 import { login } from "./AuthApi";
-import { IAuth } from "./types/auth";
+import { IAuth, IAuthResponse } from "./types/auth";
 import Link from "next/link";
 import { toast } from "react-toastify";
 
@@ -27,8 +27,14 @@ export default function Login(): JSX.Element {
 
   const onSubmit: SubmitHandler<IAuth> = async (data) => {
     login(data)
-      .then((user) => setUser(user))
-      .catch((error) => toast.error(error));
+      .then(({ success, user, error }: IAuthResponse) => {
+        if (success) {
+          setUser(user);
+        } else {
+          toast.error(error);
+        }
+      })
+      .catch((response: IAuthResponse) => toast.error(response.error));
   };
 
   return (
