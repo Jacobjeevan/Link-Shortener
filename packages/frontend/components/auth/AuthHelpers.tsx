@@ -1,7 +1,6 @@
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
-import { IAuth, AuthFn, IUser, IAuthResponse } from "./types/auth";
 
 const registerFormSchema = yup.object().shape({
   email: yup.string().required().email(),
@@ -31,17 +30,6 @@ export const registerResolver = yupResolver(registerFormSchema);
 export const loginResolver = yupResolver(loginFormSchema);
 export const requestResetResolver = yupResolver(requestPasswordResetFormSchema);
 export const resetPasswordResolver = yupResolver(resetPasswordFormSchema);
-
-export async function submitForm(callAPI: AuthFn, data: IAuth): Promise<IUser | null> {
-  const APIresponse: IAuthResponse = await callAPI(data);
-  const { success, user, error } = APIresponse;
-  if (success && user) {
-    return user;
-  } else {
-    toast.error(error);
-    return null;
-  }
-}
 
 export const formClass = "flex flex-col space-y-3 items-center";
 export const formHeaderClass = "p-4 text-2xl mb-3 bg-gray-200";

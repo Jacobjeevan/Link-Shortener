@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import { useAppContext } from "../main/AppContext";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import {
   errorClass,
   formClass,
@@ -9,11 +9,11 @@ import {
   linkToResetClass,
   loginResolver,
   submitBtnClass,
-  submitForm,
 } from "./AuthHelpers";
 import { login } from "./AuthApi";
 import { IAuth } from "./types/auth";
 import Link from "next/link";
+import { toast } from "react-toastify";
 
 export default function Login(): JSX.Element {
   const { setUser } = useAppContext();
@@ -21,15 +21,14 @@ export default function Login(): JSX.Element {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<IAuth>({
     resolver: loginResolver,
   });
 
-  const onSubmit = async (data: IAuth) => {
-    const user = await submitForm(login, data);
-    if (user) {
-      setUser(user);
-    }
+  const onSubmit: SubmitHandler<IAuth> = async (data) => {
+    login(data)
+      .then((user) => setUser(user))
+      .catch((error) => toast.error(error));
   };
 
   return (

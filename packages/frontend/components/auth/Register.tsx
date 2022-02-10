@@ -1,34 +1,25 @@
 import React, { Fragment } from "react";
 import { useAppContext } from "../main/AppContext";
 import { useForm } from "react-hook-form";
-import {
-  errorClass,
-  formClass,
-  formHeaderClass,
-  inputClass,
-  registerResolver,
-  submitBtnClass,
-  submitForm,
-} from "./AuthHelpers";
+import { errorClass, formClass, formHeaderClass, inputClass, registerResolver, submitBtnClass } from "./AuthHelpers";
 import { register as registerUser } from "./AuthApi";
 import { IAuth } from "./types/auth";
+import { toast } from "react-toastify";
 
 export default function Register(): JSX.Element {
   const { setUser } = useAppContext();
   const {
     register,
     handleSubmit,
-
     formState: { errors },
-  } = useForm({
+  } = useForm<IAuth>({
     resolver: registerResolver,
   });
 
   const onSubmit = async (data: IAuth) => {
-    const user = await submitForm(registerUser, data);
-    if (user) {
-      setUser(user);
-    }
+    registerUser(data)
+      .then((user) => setUser(user))
+      .catch((error) => toast.error(error));
   };
 
   return (

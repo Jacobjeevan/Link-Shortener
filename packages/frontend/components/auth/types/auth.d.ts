@@ -10,7 +10,7 @@ export interface IUser {
 }
 
 export interface IAuthResponse {
-  success: boolean;
+  success?: boolean;
   user?: IUser;
   error?: string;
 }

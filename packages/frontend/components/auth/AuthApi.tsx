@@ -10,7 +10,7 @@ export const login = (loginInfo: IAuth): Promise<IAuthResponse> =>
 
 export const logout = (): Promise<IAuthResponse> => axiosInstance.get("logout/").then(responseBody).catch(errorBody);
 
-export const register = (registerInfo: string): Promise<IAuthResponse> =>
+export const register = (registerInfo: IAuth): Promise<IAuthResponse> =>
   axiosInstance.post("/register", registerInfo).then(responseBody).catch(errorBody);
 
 export const getUser = (): Promise<IAuthResponse> => axiosInstance.get("user/").then(responseBody).catch(errorBody);
