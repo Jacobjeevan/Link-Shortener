@@ -1,12 +1,24 @@
 import { axiosInstance } from "../utils/axios";
 import useSWR from "swr";
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import { IShortenAPI, IShortenResponse } from "./types/shorten";
 import { IDeleteResponse } from "./types/deleteLink";
 import { IGetLongUrlResponse } from "./types/getLongUrl";
 import { ILink, IGetLinksResponse, IGetLinksAxiosResponse } from "./types/getLinks";
 
-export async function shorten(body: IShortenAPI): Promise<IShortenResponse> {
+const responseBody = (response: AxiosResponse) => response.data;
+const errorBody = (error: AxiosError) => error.response;
+
+export const shorten = (body: IShortenAPI): Promise<IShortenResponse> =>
+  axiosInstance.post("shorten/", body).then(responseBody).catch(errorBody);
+
+export const getLongUrl = (shortUrl: string): Promise<IGetLongUrlResponse> =>
+  axiosInstance.get(`${process.env.BACKEND_URL}/${shortUrl}`).then(responseBody).catch(errorBody);
+
+export const deleteShortUrl = (urlId: string): Promise<IDeleteResponse> =>
+  axiosInstance.post("/delete", { urlId }).then(responseBody).catch(errorBody);
+
+/* export async function shorten(body: IShortenAPI): Promise<IShortenResponse> {
   let response: AxiosResponse<IShortenResponse>;
   try {
     response = await axiosInstance.post<IShortenResponse>("shorten/", body);
@@ -14,9 +26,9 @@ export async function shorten(body: IShortenAPI): Promise<IShortenResponse> {
     response = error.response;
   }
   return response.data;
-}
+} */
 
-export async function getLongUrl(shortUrl: string): Promise<IGetLongUrlResponse> {
+/* export async function getLongUrl(shortUrl: string): Promise<IGetLongUrlResponse> {
   let response: AxiosResponse<IGetLongUrlResponse>;
   try {
     response = await axios.get<IGetLongUrlResponse>(`${process.env.BACKEND_URL}/${shortUrl}`);
@@ -24,7 +36,7 @@ export async function getLongUrl(shortUrl: string): Promise<IGetLongUrlResponse>
     response = error.response;
   }
   return response.data;
-}
+} */
 
 export function useGetLinks(shouldFetch: boolean): IGetLinksResponse {
   const fetcher = () => axiosInstance.get<IGetLinksAxiosResponse>("/all/").then((res) => res.data);
@@ -36,7 +48,7 @@ export function useGetLinks(shouldFetch: boolean): IGetLinksResponse {
   return { links, fetchError: error, isLoading: !error && !links, mutate };
 }
 
-export async function deleteShortUrl(urlId: string): Promise<IDeleteResponse> {
+/* export async function deleteShortUrl(urlId: string): Promise<IDeleteResponse> {
   let response: AxiosResponse<IDeleteResponse>;
   try {
     response = await axiosInstance.post<IDeleteResponse>("/delete", {
@@ -47,3 +59,4 @@ export async function deleteShortUrl(urlId: string): Promise<IDeleteResponse> {
   }
   return response.data;
 }
+ */
