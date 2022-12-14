@@ -11,7 +11,7 @@ This repo holds Link Shortener project.
 
 #### Deployments :rocket:
 
-- v1: [Jeevan Link](https://www.jeevan.link)
+- v1: [Jeevan Link](Taken Down for Maintenance)
 
 What's new?
 
